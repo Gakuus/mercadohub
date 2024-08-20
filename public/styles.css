@@ -1,0 +1,151 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+header {
+    background-color: #161616;
+    color: #fff;
+    padding: 15px;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+nav ul li {
+    margin-right: 15px;
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    padding: 5px 10px;
+}
+
+nav ul li a.active {
+    background-color: #555;
+    border-radius: 5px;
+}
+
+main {
+    padding: 20px;
+}
+
+.section {
+    display: none;
+}
+
+.section.active {
+    display: block;
+}
+
+.pinterest-grid {
+    column-count: 3;
+    column-gap: 1em;
+}
+
+.pinterest-grid .item {
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 1em;
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.pinterest-grid .item:hover {
+    transform: scale(1.05);
+}
+
+.pinterest-grid .item img {
+    max-width: 100%;
+    max-height: 125px; /* Set a maximum height */
+    width: auto;
+    height: auto;
+    border-radius: 5px;
+}
+
+
+.pinterest-grid .item span {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.pinterest-grid .item p {
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 5px;
+}
+
+#busqueda-form {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+#busqueda-form input {
+    flex-grow: 1;
+    padding: 5px 10px;
+    font-size: 16px;
+}
+
+#busqueda-form button {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+#busqueda-form button:hover {
+    background-color: #555;
+}
+
+
+
+
+
+button {
+    padding: 17px 40px;
+    border-radius: 50px;
+    cursor: pointer;
+    border: 0;
+    background-color: white;
+    -webkit-box-shadow: rgb(0 0 0 / 5%) 0 0 8px;
+    box-shadow: rgb(0 0 0 / 5%) 0 0 8px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-size: 15px;
+    -webkit-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+  }
+  
+  button:hover {
+    letter-spacing: 3px;
+    background-color: hsl(0, 90%, 47%);
+    color: hsl(0, 0%, 100%);
+    -webkit-box-shadow: rgb(220, 24, 24) 0px 7px 29px 0px;
+    box-shadow: rgb(238, 0, 0) 0px 7px 29px 0px;
+  }
+  
+  button:active {
+    letter-spacing: 3px;
+    background-color: hsl(0, 93%, 49%);
+    color: hsl(0, 0%, 100%);
+    -webkit-box-shadow: rgb(220, 24, 24) 0px 0px 0px 0px;
+    box-shadow: rgb(255, 2, 2) 0px 0px 0px 0px;
+    -webkit-transform: translateY(10px);
+    -ms-transform: translateY(10px);
+    transform: translateY(10px);
+    -webkit-transition: 100ms;
+    transition: 100ms;
+  }
+  

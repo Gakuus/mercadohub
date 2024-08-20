@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="styles.css">
+    <title>Register</title>
+</head>
+<body>
+    <section>
+        <div class="form-box">
+            <div class="form-value">
+                <form id="register-form">
+                    <h2>Register</h2>
+                    <div class="inputbox">
+                        <ion-icon name="mail-outline"></ion-icon>
+                        <input type="email" id="register-email" name="email" required>
+                        <label for="register-email">Registrese con su email</label>
+                    </div>
+                    <div class="inputbox">
+                        <ion-icon name="person-outline"></ion-icon>
+                        <input type="text" id="register-nombre_usuario" name="nombre_usuario" required>
+                        <label for="register-nombre_usuario">Nombre de Usuario</label>
+                    </div>
+                    <div class="inputbox">
+                        <ion-icon name="lock-closed-outline"></ion-icon>
+                        <input type="password" id="register-contrasena" name="contrasena" required>
+                        <label for="register-contrasena">Crea una Contraseña</label>
+                    </div>
+                    <button type="submit">Registrarse</button>
+                    <div class="register">
+                        <p>Ya tiene una cuenta? <a href="/proyecto/Login/index.html">Logeate aqui</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <script src="script.js"></script> 
+</body>
+</html>
