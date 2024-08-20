@@ -30,6 +30,8 @@ if (!isset($_SESSION['user_id'])) {
                     <li class="nav-item active">
                         <a class="nav-link" href="#" data-section="items-disponibles">Home <span class="sr-only">(current)</span></a>
                     </li>
+                    <a class="nav-link" href="#" data-section="intercambio">Agregar Item <span class="sr-only">(current)</span></a>
+
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Secciones
@@ -38,7 +40,6 @@ if (!isset($_SESSION['user_id'])) {
                             <a class="dropdown-item" href="#" data-section="inicio">Sobre nosotros</a>
                             <a class="dropdown-item" href="#" data-section="reglas">Reglas</a>
                             <a class="dropdown-item" href="#" data-section="foro">Foro</a>
-                            <a class="dropdown-item" href="#" data-section="intercambio">Intercambio de Items</a>
                             <a class="dropdown-item" href="#" data-section="perfil">Perfil</a>
                         </div>
                     </li>
