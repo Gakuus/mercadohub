@@ -11,15 +11,24 @@ try {
         $contrasena = $data['contrasena'] ?? '';
 
         if ($email && $nombre_usuario && $contrasena) {
-            $hashed_password = password_hash($contrasena, PASSWORD_DEFAULT);
+            // Verificar si el usuario ya existe
+            $stmt = $pdo->prepare('SELECT COUNT(*) FROM usuario WHERE nombre_usuario = ? OR email = ?');
+            $stmt->execute([$nombre_usuario, $email]);
+            $userExists = $stmt->fetchColumn();
 
-            try {
-                $stmt = $pdo->prepare('INSERT INTO usuario (nombre_usuario, contrasena, email) VALUES (?, ?, ?)');
-                $stmt->execute([$nombre_usuario, $hashed_password, $email]);
+            if ($userExists > 0) {
+                echo json_encode(['success' => false, 'message' => 'El usuario o email ya están registrados']);
+            } else {
+                $hashed_password = password_hash($contrasena, PASSWORD_DEFAULT);
 
-                echo json_encode(['success' => true, 'message' => 'Usuario registrado exitosamente']);
-            } catch (PDOException $e) {
-                echo json_encode(['success' => false, 'message' => 'Error al registrar el usuario: ' . $e->getMessage()]);
+                try {
+                    $stmt = $pdo->prepare('INSERT INTO usuario (nombre_usuario, contrasena, email) VALUES (?, ?, ?)');
+                    $stmt->execute([$nombre_usuario, $hashed_password, $email]);
+
+                    echo json_encode(['success' => true, 'message' => 'Usuario registrado exitosamente']);
+                } catch (PDOException $e) {
+                    echo json_encode(['success' => false, 'message' => 'Error al registrar el usuario: ' . $e->getMessage()]);
+                }
             }
         } else {
             echo json_encode(['success' => false, 'message' => 'Por favor complete todos los campos']);
