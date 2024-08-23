@@ -58,54 +58,59 @@ if (!isset($_SESSION['user_id'])) {
     </header>
 
     <main>
-        <!-- Sección Inicio -->
+        <!-- apartado sobre nosotros-->
         <section id="inicio" class="section">
             <h1>Bienvenido a MercadoHub</h1>
             <p>Trade de items de videojuegos</p>
         </section>
 
-        <!-- Sección Reglas -->
+        <!-- aca van las reglas proximamente tanto de la publicacion de items como el foro-->
         <section id="reglas" class="section">
             <h1>Reglas del Sitio</h1>
             <p>Aquí van las reglas del sitio.</p>
         </section>
 
-        <!-- Sección Foro -->
+        <!-- aca va ir un foro q se tiene q programar proximamente-->
         <section id="foro" class="section">
             <h1>Foro</h1>
             <p>Aquí va el foro funcional.</p>
         </section>
 
-       <!-- Formulario para agregar un nuevo item -->
-<section id="intercambio" class="section">
-    <h1>Intercambio de Items</h1>
+
+<!-- apartado para agregar items-->
+        <section id="intercambio" class="section">
+    <h1>Agregar Items</h1>
     <form id="intercambio-form">
-        <label for="item-nombre">Nombre del Item:</label>
-        <input type="text" id="item-nombre" name="item-nombre" required>
-        
-        <label for="item-imagen">Imagen del Item:</label>
-        <input type="file" id="item-imagen" name="item-imagen" accept="image/*" required>
+        <div class="form-group">
+            <label for="item-nombre">Nombre del Item:</label>
+            <input type="text" id="item-nombre" name="item-nombre" class="form-control" required>
+        </div>
 
-        <label for="item-categoria">Categoría del Juego:</label>
-        <select id="item-categoria" name="item-categoria" required>
-            <!-- Las categorías se cargarán dinámicamente aquí -->
-        </select>
+        <div class="form-group">
+            <label for="item-imagen">Imagen del Item:</label>
+            <input type="file" id="item-imagen" name="item-imagen" class="form-control" accept="image/*" required>
+        </div>
 
-        <button type="submit">Agregar Item</button>
+        <div class="form-group">
+            <label for="item-categoria">Categoría del Juego:</label>
+            <select id="item-categoria" name="item-categoria" class="form-control" required>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block">Agregar Item</button>
     </form>
 </section>
 
-<!-- Sección de items disponibles -->
+<!-- aca aparecen todos los items subidos en la BD -->
 <section id="items-disponibles" class="section active">   
     <select id="categoria-filter">
-        <!-- Las categorías se cargarán dinámicamente aquí -->
     </select>
 
     <div id="items-disponibles-lista" class="pinterest-grid"></div>
 </section>
 
 
-        <!-- Sección Perfil -->
+        <!-- apartado de perfil proximamente -->
         <section id="perfil" class="section">
             <h1>Perfil</h1>
             <img id="profile-image" src="" alt="Imagen de Perfil">
