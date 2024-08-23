@@ -20,7 +20,7 @@ if (!isset($_SESSION['user_id'])) {
 <body>
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <a class="navbar-brand" href="#"  data-section="items-disponibles" >MercadoHub</a>
+            <a class="navbar-brand" href="#" data-section="items-disponibles">MercadoHub</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -76,30 +76,34 @@ if (!isset($_SESSION['user_id'])) {
             <p>Aquí va el foro funcional.</p>
         </section>
 
-        <!-- Sección Intercambio -->
-        <section id="intercambio" class="section">
-            <h1>Intercambio de Items</h1>
-            <form id="intercambio-form">
-                <label for="item-nombre">Nombre del Item:</label>
-                <input type="text" id="item-nombre" name="item-nombre" required>
-                
-                <label for="item-imagen">Imagen del Item:</label>
-                <input type="file" id="item-imagen" name="item-imagen" accept="image/*" required>
+       <!-- Formulario para agregar un nuevo item -->
+<section id="intercambio" class="section">
+    <h1>Intercambio de Items</h1>
+    <form id="intercambio-form">
+        <label for="item-nombre">Nombre del Item:</label>
+        <input type="text" id="item-nombre" name="item-nombre" required>
+        
+        <label for="item-imagen">Imagen del Item:</label>
+        <input type="file" id="item-imagen" name="item-imagen" accept="image/*" required>
 
-                <label for="item-categoria">Categoría del Juego:</label>
-                <select id="item-categoria" name="item-categoria" required>
-                    <!-- Las categorías se cargarán dinámicamente aquí -->
-                </select>
+        <label for="item-categoria">Categoría del Juego:</label>
+        <select id="item-categoria" name="item-categoria" required>
+            <!-- Las categorías se cargarán dinámicamente aquí -->
+        </select>
 
-                <button type="submit">Agregar Item</button>
-            </form>
-        </section>
+        <button type="submit">Agregar Item</button>
+    </form>
+</section>
 
-        <!-- Sección Items Disponibles -->
-        <section id="items-disponibles" class="section active">         
-            </form>
-            <div id="items-disponibles-lista" class="pinterest-grid"></div>
-        </section>
+<!-- Sección de items disponibles -->
+<section id="items-disponibles" class="section active">   
+    <select id="categoria-filter">
+        <!-- Las categorías se cargarán dinámicamente aquí -->
+    </select>
+
+    <div id="items-disponibles-lista" class="pinterest-grid"></div>
+</section>
+
 
         <!-- Sección Perfil -->
         <section id="perfil" class="section">

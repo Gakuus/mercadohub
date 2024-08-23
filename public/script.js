@@ -24,10 +24,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Cargar la primera sección por defecto
+    // Mostrar la primera sección por defecto
     showSection('items-disponibles');
 
-    // Manejo de la carga de items
+    // Manejo del formulario de agregar items
     document.getElementById('intercambio-form').addEventListener('submit', function(event) {
         event.preventDefault();
 
@@ -74,69 +74,9 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('item-imagen').value = '';
     });
 
-    // Búsqueda de items
-    document.getElementById('navbar-search').addEventListener('input', function(event) {
-        const query = event.target.value.toLowerCase();
-        const itemElements = document.querySelectorAll('#items-disponibles-lista .item');
-
-        itemElements.forEach(item => {
-            const itemId = item.querySelector('img').alt.toLowerCase();
-            const itemNombre = item.querySelector('span').textContent.toLowerCase();
-
-            if (itemId.includes(query) || itemNombre.includes(query)) {
-                item.style.display = '';
-            } else {
-                item.style.display = 'none';
-            }
-        });
-    });
-
-   // Carga de items disponibles
-function loadItems() {
-    fetch('/proyecto/api/getItems.php')
-        .then(response => response.json())
-        .then(data => {
-            if (data.error) {
-                alert(data.error);
-                return;
-            }
-
-            const itemsLista = document.getElementById('items-disponibles-lista');
-            itemsLista.innerHTML = '';
-
-            data.forEach(item => {
-                const itemDisponiblesElement = document.createElement('div');
-                itemDisponiblesElement.classList.add('item');
-
-                const itemDisponiblesImg = document.createElement('img');
-                itemDisponiblesImg.src = item.img;
-                itemDisponiblesImg.alt = item.nombre;
-
-                const itemDisponiblesName = document.createElement('span');
-                itemDisponiblesName.textContent = item.nombre;
-
-                const itemUser = document.createElement('p');
-                itemUser.textContent = 'Publicado por: ' + item.usuario;
-
-                const itemCategoria = document.createElement('p');
-                itemCategoria.textContent = 'Categoría: ' + item.categoria;
-
-                itemDisponiblesElement.appendChild(itemDisponiblesImg);
-                itemDisponiblesElement.appendChild(itemDisponiblesName);
-                itemDisponiblesElement.appendChild(itemUser);
-                itemDisponiblesElement.appendChild(itemCategoria);
-                itemsLista.appendChild(itemDisponiblesElement);
-            });
-        }).catch(error => {
-            console.error('Error:', error);
-            alert('Hubo un problema al cargar los items.');
-        });
-}
-
-
-    // Cargar perfil
-    function loadProfile() {
-        fetch('/proyecto/api/getProfile.php')
+    // Cargar items disponibles con categoría filtrada
+    function loadItems(categoriaId = 'all') {
+        fetch('/proyecto/api/getItems.php?categoria=' + categoriaId)
             .then(response => response.json())
             .then(data => {
                 if (data.error) {
@@ -144,28 +84,59 @@ function loadItems() {
                     return;
                 }
 
-                document.getElementById('profile-image').src = data.imagen;
-                document.getElementById('profile-name').textContent = data.nombre;
-                document.getElementById('profile-bio').textContent = data.bio;
+                const itemsLista = document.getElementById('items-disponibles-lista');
+                itemsLista.innerHTML = '';
+
+                data.forEach(item => {
+                    const itemDisponiblesElement = document.createElement('div');
+                    itemDisponiblesElement.classList.add('item');
+
+                    const itemDisponiblesImg = document.createElement('img');
+                    itemDisponiblesImg.src = item.img;
+                    itemDisponiblesImg.alt = item.id;
+
+                    const itemDisponiblesSpan = document.createElement('span');
+                    itemDisponiblesSpan.textContent = item.nombre;
+
+                    const itemUserSpan = document.createElement('span');
+                    itemUserSpan.textContent = `Usuario: ${item.usuario}`;
+
+                    const itemCategorySpan = document.createElement('span');
+                    itemCategorySpan.textContent = `Categoría: ${item.categoria}`;
+
+                    itemDisponiblesElement.appendChild(itemDisponiblesImg);
+                    itemDisponiblesElement.appendChild(itemDisponiblesSpan);
+                    itemDisponiblesElement.appendChild(itemUserSpan);
+                    itemDisponiblesElement.appendChild(itemCategorySpan);
+                    itemsLista.appendChild(itemDisponiblesElement);
+                });
             }).catch(error => {
                 console.error('Error:', error);
-                alert('Hubo un problema al cargar el perfil.');
+                alert('Hubo un problema al cargar los items.');
             });
     }
 
-    // Cargar categorías
+    // Función unificada para cargar categorías en ambos select
     function loadCategorias() {
         fetch('/proyecto/api/getCategorias.php')
             .then(response => response.json())
             .then(data => {
-                const categoriasSelect = document.getElementById('item-categoria');
-                categoriasSelect.innerHTML = '';
+                const categoriasSelectForm = document.getElementById('item-categoria');
+                const categoriasSelectFilter = document.getElementById('categoria-filter');
+
+                categoriasSelectForm.innerHTML = '<option value="" disabled selected>Selecciona una categoría</option>';
+                categoriasSelectFilter.innerHTML = '<option value="all">Todas las categorias</option>';
 
                 data.forEach(categoria => {
-                    const option = document.createElement('option');
-                    option.value = categoria.id;
-                    option.textContent = categoria.nombre;
-                    categoriasSelect.appendChild(option);
+                    const optionForm = document.createElement('option');
+                    optionForm.value = categoria.id;
+                    optionForm.textContent = categoria.nombre;
+                    categoriasSelectForm.appendChild(optionForm);
+
+                    const optionFilter = document.createElement('option');
+                    optionFilter.value = categoria.id;
+                    optionFilter.textContent = categoria.nombre;
+                    categoriasSelectFilter.appendChild(optionFilter);
                 });
             }).catch(error => {
                 console.error('Error:', error);
@@ -173,7 +144,27 @@ function loadItems() {
             });
     }
 
-    // Cargar datos al inicio
-    loadCategorias();
+    // Filtrar items por categoría
+    document.getElementById('categoria-filter').addEventListener('change', function() {
+        const selectedCategoria = this.value;
+        loadItems(selectedCategoria);
+    });
+
+    // Cargar categorías y items al inicio
+    loadCategorias();  // Cargamos categorías en ambos apartados
     loadItems();
+
+    // Cargar perfil de usuario
+    function loadProfile() {
+        fetch('/proyecto/api/getProfile.php')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('profile-image').src = data.profile_image;
+                document.getElementById('profile-name').textContent = data.profile_name;
+                document.getElementById('profile-bio').textContent = data.profile_bio;
+            }).catch(error => {
+                console.error('Error:', error);
+                alert('Hubo un problema al cargar el perfil.');
+            });
+    }
 });
