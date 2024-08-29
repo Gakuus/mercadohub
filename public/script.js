@@ -1,170 +1,146 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
     const sections = document.querySelectorAll('.section');
     const navLinks = document.querySelectorAll('nav a');
+    const itemList = document.getElementById('items-disponibles-lista');
+    const categoriaFilter = document.getElementById('categoria-filter');
+    const categoriasSelectForm = document.getElementById('item-categoria');
+    const navbarSearchForm = document.getElementById('navbar-search-form');
+    const intercambioForm = document.getElementById('intercambio-form');
+    let allItems = [];
 
-    function showSection(sectionId) {
-        sections.forEach(section => {
-            section.style.display = section.id === sectionId ? 'block' : 'none';
+    const fetchJSON = (url) => fetch(url).then(res => res.json());
+
+    const showSection = (sectionId) => {
+        sections.forEach(section => section.style.display = section.id === sectionId ? 'block' : 'none');
+        navLinks.forEach(link => link.classList.toggle('active', link.getAttribute('data-section') === sectionId));
+    };
+
+    const updateOptions = (data, selectElement, defaultOption) => {
+        selectElement.innerHTML = defaultOption;
+        data.forEach(({ id, nombre }) => {
+            const option = document.createElement('option');
+            option.value = id;
+            option.textContent = nombre;
+            selectElement.appendChild(option);
         });
+    };
 
-        navLinks.forEach(link => {
-            link.classList.toggle('active', link.getAttribute('data-section') === sectionId);
-        });
-    }
+    const createItemElement = ({ img, nombre, usuario, categoria }) => {
+        const itemElement = document.createElement('div');
+        itemElement.classList.add('item');
 
-    navLinks.forEach(link => {
-        link.addEventListener('click', function(event) {
-            event.preventDefault();
-            const sectionId = this.getAttribute('data-section');
-            showSection(sectionId);
+        itemElement.innerHTML = `
+            <img src="${img}" alt="${nombre}">
+            <span>${nombre}</span>
+            <span>Usuario: ${usuario}</span>
+            <span>Categoría: ${categoria}</span>
+        `;
 
-            if (sectionId === 'perfil') {
-                loadProfile();
-            }
-        });
-    });
+        return itemElement;
+    };
 
-    // Mostrar la primera sección por defecto
-    showSection('items-disponibles');
+    const displayItems = (items) => {
+        itemList.innerHTML = '';
+        items.forEach(item => itemList.appendChild(createItemElement(item)));
+    };
 
-    // Manejo del formulario de agregar items
-    document.getElementById('intercambio-form').addEventListener('submit', function(event) {
+    const loadItems = (categoriaId = 'all') => {
+        fetchJSON(`/proyecto/api/getItems.php?categoria=${categoriaId}`)
+            .then(data => {
+                if (data.error) throw new Error(data.error);
+                allItems = data; // Almacena todos los items para la búsqueda
+                displayItems(allItems);
+            })
+            .catch(error => alert(`Hubo un problema al cargar los items: ${error.message}`));
+    };
+
+    const loadProfile = () => {
+        fetchJSON('/proyecto/api/getProfile.php')
+            .then(data => {
+                document.getElementById('profile-image').src = data.profile_image;
+                document.getElementById('profile-name').textContent = data.profile_name;
+                document.getElementById('profile-bio').textContent = data.profile_bio;
+            })
+            .catch(error => alert(`Hubo un problema al cargar el perfil: ${error.message}`));
+    };
+
+    const loadCategorias = () => {
+        fetchJSON('/proyecto/api/getCategorias.php')
+            .then(data => {
+                updateOptions(data, categoriasSelectForm, '<option value="" disabled selected>Selecciona una categoría</option>');
+                updateOptions(data, categoriaFilter, '<option value="all">Todas las categorías</option>');
+            })
+            .catch(error => alert(`Hubo un problema al cargar las categorías: ${error.message}`));
+    };
+
+    const filterItems = (query) => {
+        const lowerCaseQuery = query.toLowerCase();
+        const filteredItems = allItems.filter(({ nombre, usuario }) =>
+            nombre.toLowerCase().includes(lowerCaseQuery) ||
+            usuario.toLowerCase().includes(lowerCaseQuery)
+        );
+        displayItems(filteredItems);
+    };
+
+    navLinks.forEach(link => link.addEventListener('click', (event) => {
+        event.preventDefault();
+        const sectionId = event.target.getAttribute('data-section');
+        showSection(sectionId);
+        if (sectionId === 'perfil') loadProfile();
+    }));
+
+    categoriaFilter.addEventListener('change', (event) => loadItems(event.target.value));
+
+    intercambioForm.addEventListener('submit', function(event) {
         event.preventDefault();
 
-        const itemNombre = document.getElementById('item-nombre').value;
-        const itemImagenInput = document.getElementById('item-imagen');
-        const itemImagen = itemImagenInput.files[0];
+        const itemNombre = document.getElementById('item-nombre').value.trim();
+        const itemImagen = document.getElementById('item-imagen').files[0];
         const itemCategoria = document.getElementById('item-categoria').value;
 
-        if (!itemNombre.trim() || !itemImagen || !itemCategoria) {
+        if (!itemNombre || !itemImagen || !itemCategoria) {
             alert('Por favor, introduce un nombre, una imagen y una categoría válidos.');
             return;
         }
 
         const reader = new FileReader();
-        reader.onload = function(e) {
-            const itemUrl = e.target.result;
-
+        reader.onload = (e) => {
             fetch('/proyecto/api/addItem.php', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     nombre: itemNombre,
-                    url: itemUrl,
+                    url: e.target.result,
                     categoria: itemCategoria
                 })
-            }).then(response => response.json())
-              .then(data => {
-                  if (data.error) {
-                      alert(data.error);
-                  } else {
-                      alert(data.message);
-                      loadItems();
-                  }
-              }).catch(error => {
-                  console.error('Error:', error);
-                  alert('Hubo un problema con la solicitud.');
-              });
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.error) throw new Error(data.error);
+                alert(data.message);
+                loadItems();
+            })
+            .catch(error => alert(`Hubo un problema con la solicitud: ${error.message}`));
         };
         reader.readAsDataURL(itemImagen);
 
-        document.getElementById('item-nombre').value = '';
-        document.getElementById('item-imagen').value = '';
+        intercambioForm.reset();
     });
 
-    // Cargar items disponibles con categoría filtrada
-    function loadItems(categoriaId = 'all') {
-        fetch('/proyecto/api/getItems.php?categoria=' + categoriaId)
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    alert(data.error);
-                    return;
-                }
-
-                const itemsLista = document.getElementById('items-disponibles-lista');
-                itemsLista.innerHTML = '';
-
-                data.forEach(item => {
-                    const itemDisponiblesElement = document.createElement('div');
-                    itemDisponiblesElement.classList.add('item');
-
-                    const itemDisponiblesImg = document.createElement('img');
-                    itemDisponiblesImg.src = item.img;
-                    itemDisponiblesImg.alt = item.id;
-
-                    const itemDisponiblesSpan = document.createElement('span');
-                    itemDisponiblesSpan.textContent = item.nombre;
-
-                    const itemUserSpan = document.createElement('span');
-                    itemUserSpan.textContent = `Usuario: ${item.usuario}`;
-
-                    const itemCategorySpan = document.createElement('span');
-                    itemCategorySpan.textContent = `Categoría: ${item.categoria}`;
-
-                    itemDisponiblesElement.appendChild(itemDisponiblesImg);
-                    itemDisponiblesElement.appendChild(itemDisponiblesSpan);
-                    itemDisponiblesElement.appendChild(itemUserSpan);
-                    itemDisponiblesElement.appendChild(itemCategorySpan);
-                    itemsLista.appendChild(itemDisponiblesElement);
-                });
-            }).catch(error => {
-                console.error('Error:', error);
-                alert('Hubo un problema al cargar los items.');
-            });
-    }
-
-    // Función unificada para cargar categorías en ambos select
-    function loadCategorias() {
-        fetch('/proyecto/api/getCategorias.php')
-            .then(response => response.json())
-            .then(data => {
-                const categoriasSelectForm = document.getElementById('item-categoria');
-                const categoriasSelectFilter = document.getElementById('categoria-filter');
-
-                categoriasSelectForm.innerHTML = '<option value="" disabled selected>Selecciona una categoría</option>';
-                categoriasSelectFilter.innerHTML = '<option value="all">Todas las categorias</option>';
-
-                data.forEach(categoria => {
-                    const optionForm = document.createElement('option');
-                    optionForm.value = categoria.id;
-                    optionForm.textContent = categoria.nombre;
-                    categoriasSelectForm.appendChild(optionForm);
-
-                    const optionFilter = document.createElement('option');
-                    optionFilter.value = categoria.id;
-                    optionFilter.textContent = categoria.nombre;
-                    categoriasSelectFilter.appendChild(optionFilter);
-                });
-            }).catch(error => {
-                console.error('Error:', error);
-                alert('Hubo un problema al cargar las categorías.');
-            });
-    }
-
-    // Filtrar items por categoría
-    document.getElementById('categoria-filter').addEventListener('change', function() {
-        const selectedCategoria = this.value;
-        loadItems(selectedCategoria);
+    navbarSearchForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const query = document.getElementById('navbar-search').value.trim();
+        if (query) {
+            filterItems(query);
+        } else {
+            alert('Por favor, introduce un término de búsqueda.');
+        }
     });
 
-    // Cargar categorías y items al inicio
-    loadCategorias();  // Cargamos categorías en ambos apartados
+    
+
+    // Initialize
+    showSection('items-disponibles');
+    loadCategorias();
     loadItems();
-
-    // Cargar perfil de usuario
-    function loadProfile() {
-        fetch('/proyecto/api/getProfile.php')
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('profile-image').src = data.profile_image;
-                document.getElementById('profile-name').textContent = data.profile_name;
-                document.getElementById('profile-bio').textContent = data.profile_bio;
-            }).catch(error => {
-                console.error('Error:', error);
-                alert('Hubo un problema al cargar el perfil.');
-            });
-    }
 });

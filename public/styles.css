@@ -114,8 +114,8 @@ main {
 
 
 
-/* botones cambiar de clases proximamente*/
-button {
+/* botones cambiar de clases proximamente
+.btn btn-link nav-link {
     padding: 17px 40px;
     border-radius: 50px;
     cursor: pointer;
@@ -130,7 +130,7 @@ button {
     transition: all 0.5s ease;
   }
   
-  button:hover {
+  .btn-btn-linknav-link:hover {
     letter-spacing: 3px;
     background-color: hsl(0, 90%, 47%);
     color: hsl(0, 0%, 100%);
@@ -138,7 +138,7 @@ button {
     box-shadow: rgb(238, 0, 0) 0px 7px 29px 0px;
   }
   
-  button:active {
+  btn-link nav-link:active {
     letter-spacing: 3px;
     background-color: hsl(0, 93%, 49%);
     color: hsl(0, 0%, 100%);
@@ -191,7 +191,7 @@ button {
 
 #intercambio-form button {
     padding: 10px 15px;
-    background-color: #ffffff;
+    background-color: #000000;
     color: #ffffff;
     border: none;
     border-radius: 5px;
