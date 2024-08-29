@@ -7,11 +7,13 @@ header('Content-Type: application/json');
 try {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $data = json_decode(file_get_contents('php://input'), true);
-        $email = $data['email'] ?? '';
-        $nombre_usuario = $data['nombre_usuario'] ?? '';
+        
+        // Sanitize and validate input
+        $email = filter_var($data['email'] ?? '', FILTER_SANITIZE_EMAIL);
+        $nombre_usuario = filter_var($data['nombre_usuario'] ?? '', FILTER_SANITIZE_STRING);
         $contrasena = $data['contrasena'] ?? '';
 
-        if ($email && $nombre_usuario && $contrasena) {
+        if (filter_var($email, FILTER_VALIDATE_EMAIL) && !empty($nombre_usuario) && !empty($contrasena)) {
             $stmt = $pdo->prepare('SELECT * FROM usuario WHERE email = ? AND nombre_usuario = ?');
             $stmt->execute([$email, $nombre_usuario]);
             $user = $stmt->fetch();
@@ -23,7 +25,7 @@ try {
                 echo json_encode(['success' => false, 'message' => 'Email, nombre de usuario o contraseña incorrectos']);
             }
         } else {
-            echo json_encode(['success' => false, 'message' => 'Por favor complete todos los campos']);
+            echo json_encode(['success' => false, 'message' => 'Por favor complete todos los campos correctamente']);
         }
     }
 } catch (Exception $e) {
