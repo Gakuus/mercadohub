@@ -1,45 +1,50 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
-*{
+* {
     margin: 0;
     padding: 0;
-    font-family: 'poppins',sans-serif;
+    font-family: 'Poppins', sans-serif;
+    box-sizing: border-box;
 }
-section{
+section {
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     width: 100%;
-    
-    background: url('background6.jpg')no-repeat;
+    background: url('background6.jpg') no-repeat;
     background-position: center;
     background-size: cover;
+    padding: 20px;
 }
-.form-box{
+.form-box {
     position: relative;
-    width: 400px;
-    height: 450px;
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    max-height: 450px;
     background: transparent;
-    border: 2px solid rgba(255,255,255,0.5);
+    border: 2px solid rgba(255, 255, 255, 0.5);
     border-radius: 20px;
     backdrop-filter: blur(15px);
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-
+    padding: 20px;
 }
-h2{
+h2 {
     font-size: 2em;
     color: #fff;
     text-align: center;
 }
-.inputbox{
+.inputbox {
     position: relative;
-    margin: 30px 0;
-    width: 310px;
+    margin: 20px 0;
+    width: 100%;
+    max-width: 310px;
     border-bottom: 2px solid #fff;
 }
-.inputbox label{
+.inputbox label {
     position: absolute;
     top: 50%;
     left: 5px;
@@ -50,8 +55,8 @@ h2{
     transition: .5s;
 }
 input:focus ~ label,
-input:valid ~ label{
-top: -5px;
+input:valid ~ label {
+    top: -5px;
 }
 .inputbox input {
     width: 100%;
@@ -60,37 +65,38 @@ top: -5px;
     border: none;
     outline: none;
     font-size: 1em;
-    padding:0 35px 0 5px;
+    padding: 0 35px 0 5px;
     color: #fff;
 }
-.inputbox ion-icon{
+.inputbox ion-icon {
     position: absolute;
     right: 8px;
     color: #fff;
     font-size: 1.2em;
     top: 20px;
 }
-.forget{
-    margin: -15px 0 15px ;
+.forget {
+    margin: -10px 0 15px;
     font-size: .9em;
     color: #fff;
     display: flex;
-    justify-content: space-between;  
+    justify-content: space-between;
+    width: 100%;
+    max-width: 310px;
 }
-
-.forget label input{
+.forget label input {
     margin-right: 3px;
-    
 }
-.forget label a{
+.forget label a {
     color: #fff;
     text-decoration: none;
 }
-.forget label a:hover{
+.forget label a:hover {
     text-decoration: underline;
 }
-button{
+button {
     width: 100%;
+    max-width: 310px;
     height: 40px;
     border-radius: 40px;
     background: #fff;
@@ -100,17 +106,58 @@ button{
     font-size: 1em;
     font-weight: 600;
 }
-.register{
+.register {
     font-size: .9em;
     color: #fff;
     text-align: center;
     margin: 25px 0 10px;
 }
-.register p a{
+.register p a {
     text-decoration: none;
     color: #fff;
     font-weight: 600;
 }
-.register p a:hover{
+.register p a:hover {
     text-decoration: underline;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    h2 {
+        font-size: 1.8em;
+    }
+    .form-box {
+        width: 100%;
+        max-width: 350px;
+        padding: 15px;
+    }
+    .inputbox {
+        margin: 15px 0;
+    }
+    button {
+        max-width: 280px;
+        height: 40px;
+    }
+}
+
+@media (max-width: 480px) {
+    h2 {
+        font-size: 1.5em;
+    }
+    .form-box {
+        width: 100%;
+        max-width: 300px;
+        padding: 10px;
+    }
+    .inputbox {
+        margin: 10px 0;
+    }
+    button {
+        max-width: 250px;
+        height: 35px;
+    }
+    .forget,
+    .register {
+        font-size: 0.8em;
+    }
 }

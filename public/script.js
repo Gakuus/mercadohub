@@ -137,9 +137,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    
-
-    // Initialize
     showSection('items-disponibles');
     loadCategorias();
     loadItems();
