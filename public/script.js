@@ -1462,6 +1462,24 @@ document.addEventListener('DOMContentLoaded', () => {
     // Start polling
     notifInterval = setInterval(checkNotifications, 30000);
 
+    // === THEME TOGGLE ===
+    (function initTheme() {
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light') document.documentElement.setAttribute('data-theme', 'light');
+    })();
+
+    document.getElementById('theme-toggle')?.addEventListener('click', () => {
+        const html = document.documentElement;
+        const isLight = html.getAttribute('data-theme') === 'light';
+        if (isLight) {
+            html.removeAttribute('data-theme');
+            localStorage.setItem('theme', 'dark');
+        } else {
+            html.setAttribute('data-theme', 'light');
+            localStorage.setItem('theme', 'light');
+        }
+    });
+
     // Mobile nav toggle
     if (navToggle) {
         navToggle.addEventListener('click', () => {
