@@ -519,6 +519,85 @@ main {
     color: rgba(255, 255, 255, 0.3);
 }
 
+/* === Dropzone === */
+.dropzone {
+    position: relative;
+    border: 2px dashed rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    padding: 24px 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    background: rgba(255, 255, 255, 0.02);
+    overflow: hidden;
+}
+
+.dropzone:hover,
+.dropzone.drag-over {
+    border-color: #77ff00;
+    background: rgba(119, 255, 0, 0.04);
+}
+
+.dropzone input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.dropzone-content {
+    position: relative;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.dropzone-content svg {
+    color: rgba(255, 255, 255, 0.25);
+    margin-bottom: 8px;
+    transition: color 0.2s;
+}
+
+.dropzone:hover .dropzone-content svg,
+.dropzone.drag-over .dropzone-content svg {
+    color: #77ff00;
+}
+
+.dropzone-content p {
+    margin: 0 0 4px;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.88em;
+}
+
+.dropzone-content p span {
+    color: #77ff00;
+    font-weight: 600;
+}
+
+.dropzone-hint {
+    font-size: 0.75em;
+    color: rgba(255, 255, 255, 0.25);
+}
+
+#image-preview {
+    display: none;
+    max-width: 100%;
+    max-height: 180px;
+    border-radius: 10px;
+    margin-top: 8px;
+    object-fit: contain;
+    position: relative;
+    z-index: 1;
+}
+
+#image-preview.visible {
+    display: block;
+}
+
+.dropzone.has-image .dropzone-content {
+    display: none;
+}
+
 /* === Add Item Form === */
 #intercambio {
     display: flex;

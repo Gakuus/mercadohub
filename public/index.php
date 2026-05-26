@@ -222,9 +222,16 @@ $isAdmin = is_admin();
                 <label for="item-precio">Precio (opcional):</label>
                 <input type="number" id="item-precio" step="0.01" min="0" placeholder="0.00">
 
-                <label for="item-imagen">Imagen del Item:</label>
-                <input type="file" id="item-imagen" name="item-imagen" accept="image/*" required>
-                <img id="image-preview" alt="Vista previa">
+                <label for="item-imagen">Imagen del Item</label>
+                <div class="dropzone" id="dropzone">
+                    <input type="file" id="item-imagen" name="item-imagen" accept="image/*" required>
+                    <div class="dropzone-content">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                        <p>Arrastra una imagen aqui o <span>selecciona</span></p>
+                        <span class="dropzone-hint">JPG, PNG, WEBP — Max 5MB</span>
+                    </div>
+                    <img id="image-preview" alt="Vista previa">
+                </div>
 
                 <label for="item-categoria">Categoria:</label>
                 <select id="item-categoria" name="item-categoria" required>

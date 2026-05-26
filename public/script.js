@@ -211,7 +211,19 @@ document.addEventListener('DOMContentLoaded', () => {
             scrollSentinel.style.display = 'none';
         } else {
             itemsEmpty.classList.remove('active');
-            items.forEach(item => itemList.appendChild(item));
+            items.forEach((item, i) => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(20px)';
+                item.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+                itemList.appendChild(item);
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        item.style.transitionDelay = `${i * 0.05}s`;
+                        item.style.opacity = '1';
+                        item.style.transform = 'translateY(0)';
+                    });
+                });
+            });
             scrollSentinel.style.display = hasMoreItems ? 'block' : 'none';
         }
     };
@@ -662,6 +674,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 intercambioForm.reset();
                 imagePreview.classList.remove('visible');
                 imagePreview.src = '';
+                if (dropzone) dropzone.classList.remove('has-image');
                 loadItems(true);
             } catch (err) { showToast('Error: ' + err.message, 'error'); }
             finally { submitBtn.disabled = false; submitBtn.textContent = 'Agregar Item'; }
@@ -669,12 +682,38 @@ document.addEventListener('DOMContentLoaded', () => {
         reader.readAsDataURL(imagen);
     });
 
+    // Drag & drop
+    const dropzone = document.getElementById('dropzone');
+    if (dropzone) {
+        ['dragenter', 'dragover'].forEach(evt => {
+            dropzone.addEventListener(evt, (e) => { e.preventDefault(); dropzone.classList.add('drag-over'); });
+        });
+        ['dragleave', 'drop'].forEach(evt => {
+            dropzone.addEventListener(evt, (e) => { e.preventDefault(); dropzone.classList.remove('drag-over'); });
+        });
+        dropzone.addEventListener('drop', (e) => {
+            const files = e.dataTransfer.files;
+            if (files.length) {
+                imageInput.files = files;
+                const event = new Event('change', { bubbles: true });
+                imageInput.dispatchEvent(event);
+            }
+        });
+    }
+
     imageInput.addEventListener('change', () => {
         const file = imageInput.files[0];
         if (file) {
             const reader = new FileReader();
-            reader.onload = (e) => { imagePreview.src = e.target.result; imagePreview.classList.add('visible'); };
+            reader.onload = (e) => {
+                imagePreview.src = e.target.result;
+                imagePreview.classList.add('visible');
+                dropzone.classList.add('has-image');
+            };
             reader.readAsDataURL(file);
+        } else {
+            imagePreview.classList.remove('visible');
+            dropzone.classList.remove('has-image');
         }
     });
 
