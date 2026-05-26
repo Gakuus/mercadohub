@@ -55,20 +55,105 @@ $isAdmin = is_admin();
 
     <main>
         <section id="inicio" class="section">
-            <h1>Bienvenido a MercadoHub</h1>
-            <p>En MercadoHub Deluxe, somos mas que una plataforma de intercambio de items; somos una comunidad comprometida con la colaboracion y el apoyo mutuo. Nuestra mision es facilitar el intercambio de bienes entre personas de manera sencilla y segura, ofreciendo un espacio donde todos puedan encontrar lo que necesitan o dar nueva vida a lo que ya no usan.
-Entendemos que cada item tiene un valor, ya sea funcional o sentimental, y por eso nos esforzamos en crear un entorno donde ese valor se pueda compartir con otros. Pero nuestro compromiso va mas alla del comercio: en MercadoHub Deluxe, tambien estamos dedicados a brindar apoyo a quienes mas lo necesitan, ofreciendo recursos y asistencia para ayudar a nuestra comunidad a prosperar.
-Ya sea que estes buscando un item en particular, o quieras ayudar a alguien con una donacion, en MercadoHub Deluxe creemos en el poder de la solidaridad y la cooperacion. Juntos, podemos hacer una diferencia.</p>
+            <div class="info-card">
+                <div class="info-hero">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#77ff00" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                    <h1>Bienvenido a MercadoHub</h1>
+                </div>
+                <div class="info-body">
+                    <p>Somos mas que una plataforma de intercambio de items; somos una comunidad comprometida con la colaboracion y el apoyo mutuo.</p>
+                    <div class="info-grid">
+                        <div class="info-grid-item">
+                            <div class="info-grid-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#77ff00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+                            </div>
+                            <h3>Intercambio seguro</h3>
+                            <p>Facilitamos el intercambio de bienes entre personas de manera sencilla y segura.</p>
+                        </div>
+                        <div class="info-grid-item">
+                            <div class="info-grid-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#77ff00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                            </div>
+                            <h3>Apoyo comunitario</h3>
+                            <p>Fomentamos el apoyo mutuo dentro de la comunidad para ayudar a quienes mas lo necesitan.</p>
+                        </div>
+                        <div class="info-grid-item">
+                            <div class="info-grid-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#77ff00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                            </div>
+                            <h3>Solidaridad</h3>
+                            <p>Creemos en el poder de la solidaridad y la cooperacion. Juntos podemos hacer una diferencia.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <section id="reglas" class="section">
-            <h1>Normas de la comunidad</h1>
-            <p>Prohibicion de Items Ilegales o Restringidos: Esta estrictamente prohibido intercambiar items que sean ilegales, peligrosos o que infrinjan las leyes locales e internacionales. Esto incluye, pero no se limita a, sustancias controladas, armas, productos falsificados, y articulos robados.
-            Apoyo Comunitario: Fomentamos el apoyo mutuo dentro de la comunidad. Si alguien necesita ayuda, ya sea dentro o fuera de la plataforma, y esta en tu capacidad ofrecerla, te animamos a hacerlo de manera altruista.
-Transacciones Justas y Transparentes: Todas las transacciones deben ser justas y transparentes. Asegurate de que ambas partes esten de acuerdo con los terminos del intercambio antes de proceder. Cualquier intento de fraude o manipulacion resultara en la suspension de la cuenta.
-Cumplimiento de Compromisos: Si te comprometes a un intercambio, es tu responsabilidad cumplir con lo acordado. No cumplir con los compromisos sin una razon valida puede llevar a la perdida de confianza dentro de la comunidad y a posibles sanciones.
-Prohibicion de Actividades Comerciales: MercadoHub Deluxe es una plataforma para el intercambio de items, no para actividades comerciales. La venta de items con fines de lucro no esta permitida y si quieren intercambiar serian de usuarios MercadoHub Deluxe no saca algun tipo de lucro.
-Veracidad en la Informacion: Es fundamental que toda la informacion proporcionada sobre los items que se intercambian sea precisa y veraz. No se permiten descripciones enganosas ni omisiones importantes.</p>
+            <div class="info-card">
+                <div class="info-hero">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ff6b7a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    <h1>Normas de la comunidad</h1>
+                </div>
+                <div class="info-body">
+                    <div class="rules-list">
+                        <div class="rule-item">
+                            <div class="rule-icon rule-danger">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                            </div>
+                            <div>
+                                <strong>Items Ilegales o Restringidos</strong>
+                                <p>Prohibido intercambiar items ilegales, peligrosos o que infrinjan leyes. Incluye sustancias controladas, armas, productos falsificados y articulos robados.</p>
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-icon rule-success">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                            </div>
+                            <div>
+                                <strong>Apoyo Comunitario</strong>
+                                <p>Fomentamos el apoyo mutuo. Si alguien necesita ayuda y esta en tu capacidad ofrecerla, te animamos a hacerlo de manera altruista.</p>
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-icon rule-warning">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                            </div>
+                            <div>
+                                <strong>Transacciones Justas</strong>
+                                <p>Todas las transacciones deben ser justas y transparentes. Cualquier intento de fraude resultara en la suspension de la cuenta.</p>
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-icon rule-warning">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                            </div>
+                            <div>
+                                <strong>Cumplimiento de Compromisos</strong>
+                                <p>Si te comprometes a un intercambio, es tu responsabilidad cumplir con lo acordado. El incumplimiento puede llevar a sanciones.</p>
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-icon rule-danger">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"/><path d="M12 18v4"/><path d="M4.93 4.93l2.83 2.83"/><path d="M16.24 16.24l2.83 2.83"/><path d="M2 12h4"/><path d="M18 12h4"/><path d="M4.93 19.07l2.83-2.83"/><path d="M16.24 7.76l2.83-2.83"/></svg>
+                            </div>
+                            <div>
+                                <strong>Prohibicion Comercial</strong>
+                                <p>MercadoHub es una plataforma para el intercambio, no para actividades comerciales. La venta con fines de lucro no esta permitida.</p>
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-icon rule-success">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                            </div>
+                            <div>
+                                <strong>Veracidad en la Informacion</strong>
+                                <p>Toda la informacion sobre los items debe ser precisa y veraz. No se permiten descripciones enganosas ni omisiones importantes.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <!-- ============ FORO ============ -->
@@ -240,21 +325,34 @@ Veracidad en la Informacion: Es fundamental que toda la informacion proporcionad
         <!-- ============ ADMIN ============ -->
         <?php if ($isAdmin): ?>
         <section id="admin" class="section">
-            <h1>Panel de Administracion</h1>
-
-            <div class="admin-section">
-                <h2>Usuarios</h2>
-                <div id="admin-users-loader" class="loader"><div class="spinner"></div></div>
-                <div id="admin-users-list"></div>
+            <div class="admin-header">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#77ff00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <h1>Panel de Administracion</h1>
             </div>
 
-            <div class="admin-section">
-                <h2>Categorias</h2>
-                <form id="admin-categoria-form" class="admin-inline-form">
-                    <input type="text" id="admin-categoria-nombre" placeholder="Nueva categoria" required>
-                    <button type="submit" class="btn-foro-submit">Agregar</button>
-                </form>
-                <div id="admin-categorias-list"></div>
+            <div class="admin-card">
+                <div class="admin-card-header">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    Usuarios
+                </div>
+                <div class="admin-card-body">
+                    <div id="admin-users-loader" class="loader"><div class="spinner"></div></div>
+                    <div id="admin-users-list"></div>
+                </div>
+            </div>
+
+            <div class="admin-card">
+                <div class="admin-card-header">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                    Categorias
+                </div>
+                <div class="admin-card-body">
+                    <form id="admin-categoria-form" class="admin-inline-form">
+                        <input type="text" id="admin-categoria-nombre" placeholder="Nueva categoria" required>
+                        <button type="submit" class="btn-foro-submit">Agregar</button>
+                    </form>
+                    <div id="admin-categorias-list"></div>
+                </div>
             </div>
         </section>
         <?php endif; ?>
