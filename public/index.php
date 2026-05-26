@@ -75,32 +75,51 @@ Veracidad en la Informacion: Es fundamental que toda la informacion proporcionad
         <section id="foro" class="section">
             <div id="foro-list-view">
                 <div class="foro-header">
-                    <h1>Foro</h1>
-                    <button id="btn-nuevo-post" class="btn-foro-nuevo">+ Nuevo Post</button>
+                    <h1>
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                        Foro
+                    </h1>
+                    <button id="btn-nuevo-post" class="btn-foro-nuevo">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        Nuevo Post
+                    </button>
                 </div>
                 <div id="foro-loader" class="loader"><div class="spinner"></div></div>
-                <div id="foro-empty" class="loader">Todavia no hay posts. Se el primero en publicar.</div>
+                <div id="foro-empty" class="foro-empty-state">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    <p>Todavia no hay posts. Se el primero en publicar.</p>
+                </div>
                 <div id="foro-posts-list"></div>
             </div>
 
             <div id="foro-create-view" style="display:none;">
-                <h1>Crear nuevo post</h1>
-                <form id="foro-create-form">
-                    <label for="foro-titulo">Titulo:</label>
-                    <input type="text" id="foro-titulo" maxlength="200" required>
-
-                    <label for="foro-contenido">Contenido:</label>
-                    <textarea id="foro-contenido" rows="6" required></textarea>
-
-                    <div class="foro-form-actions">
-                        <button type="submit" class="btn-foro-submit">Publicar</button>
-                        <button type="button" id="btn-cancelar-post" class="btn-foro-cancel">Cancelar</button>
+                <div class="foro-create-card">
+                    <div class="foro-create-header">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                        <span>Crear nuevo post</span>
                     </div>
-                </form>
+                    <form id="foro-create-form">
+                        <div class="foro-field">
+                            <label for="foro-titulo">Titulo</label>
+                            <input type="text" id="foro-titulo" maxlength="200" placeholder="Titulo de tu post..." required>
+                        </div>
+                        <div class="foro-field">
+                            <label for="foro-contenido">Contenido</label>
+                            <textarea id="foro-contenido" rows="6" placeholder="Escribe tu mensaje aqui..." required></textarea>
+                        </div>
+                        <div class="foro-form-actions">
+                            <button type="submit" class="btn-foro-submit">Publicar</button>
+                            <button type="button" id="btn-cancelar-post" class="btn-foro-cancel">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
             </div>
 
             <div id="foro-detail-view" style="display:none;">
-                <button id="btn-volver-foro" class="btn-foro-back">&larr; Volver al foro</button>
+                <button id="btn-volver-foro" class="btn-foro-back">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                    Volver
+                </button>
                 <div id="foro-detail-content"></div>
             </div>
         </section>

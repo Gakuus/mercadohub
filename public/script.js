@@ -671,8 +671,23 @@ document.addEventListener('DOMContentLoaded', () => {
             data.forEach(post => {
                 const div = document.createElement('div');
                 div.className = 'foro-post-item';
-                const fecha = new Date(post.created_at).toLocaleDateString('es-AR', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-                div.innerHTML = `<h3 class="foro-post-titulo">${post.titulo}</h3><p class="foro-post-meta">Por ${post.autor} &middot; ${fecha} &middot; ${post.comentarios} comentarios</p>`;
+                const fecha = new Date(post.created_at).toLocaleDateString('es-AR', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+                const avatarColor = getUserColor(post.autor);
+                const initial = getInitials(post.autor);
+                div.innerHTML = `
+                    <div class="foro-post-top">
+                        <h3 class="foro-post-titulo">${post.titulo}</h3>
+                    </div>
+                    <div class="foro-post-bottom">
+                        <span class="foro-post-avatar" style="background:${avatarColor}">${initial}</span>
+                        <span class="foro-post-author">${post.autor}</span>
+                        <span class="foro-post-sep">&middot;</span>
+                        <span class="foro-post-date">${fecha}</span>
+                        <span class="foro-post-comments">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                            ${post.comentarios}
+                        </span>
+                    </div>`;
                 div.addEventListener('click', () => loadForoDetail(post.id_post));
                 list.appendChild(div);
             });
@@ -687,27 +702,53 @@ document.addEventListener('DOMContentLoaded', () => {
             currentPostId = postId;
             const content = document.getElementById('foro-detail-content');
             const fecha = new Date(data.created_at).toLocaleDateString('es-AR', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+            const avatarColor = getUserColor(data.autor);
+            const initial = getInitials(data.autor);
+
             let commentsHtml = '';
             if (data.comentarios && data.comentarios.length > 0) {
                 data.comentarios.forEach(c => {
                     const cf = new Date(c.created_at).toLocaleDateString('es-AR', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-                    commentsHtml += `<div class="foro-comment"><strong>${c.autor}</strong> <span class="foro-comment-date">${cf}</span><p>${c.contenido}</p></div>`;
+                    const cColor = getUserColor(c.autor);
+                    const cInit = getInitials(c.autor);
+                    commentsHtml += `
+                        <div class="foro-comment">
+                            <div class="foro-comment-header">
+                                <span class="foro-comment-avatar" style="background:${cColor}">${cInit}</span>
+                                <strong>${c.autor}</strong>
+                                <span class="foro-comment-date">${cf}</span>
+                            </div>
+                            <p>${c.contenido}</p>
+                        </div>`;
                 });
             } else {
                 commentsHtml = '<p class="foro-no-comments">Sin comentarios aun. Se el primero en responder.</p>';
             }
-            const delBtn = data.esPropio ? `<button class="btn-delete-post" data-id="${data.id_post}">Eliminar post</button>` : '';
+            const delBtn = data.esPropio ? `<button class="btn-delete-post" data-id="${data.id_post}">Eliminar</button>` : '';
             content.innerHTML = `
-                <div class="foro-detail-header"><h2>${data.titulo}</h2>${delBtn}</div>
-                <p class="foro-detail-meta">Por ${data.autor} &middot; ${fecha}</p>
-                <div class="foro-detail-body">${data.contenido}</div>
-                <h3 class="foro-comments-title">Comentarios</h3>
-                <div class="foro-comments-list">${commentsHtml}</div>
-                <form id="foro-comment-form">
-                    <label for="foro-comment-input">Agregar comentario:</label>
-                    <textarea id="foro-comment-input" rows="3" required></textarea>
-                    <button type="submit" class="btn-foro-submit">Comentar</button>
-                </form>`;
+                <div class="foro-detail-card">
+                    <div class="foro-detail-header">
+                        <h2>${data.titulo}</h2>
+                        ${delBtn}
+                    </div>
+                    <div class="foro-detail-author-row">
+                        <span class="foro-post-avatar" style="background:${avatarColor}">${initial}</span>
+                        <span><strong>${data.autor}</strong></span>
+                        <span class="foro-post-date">${fecha}</span>
+                    </div>
+                    <div class="foro-detail-body">${data.contenido}</div>
+                </div>
+                <div class="foro-comments-section">
+                    <h3 class="foro-comments-title">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                        Comentarios (${data.comentarios ? data.comentarios.length : 0})
+                    </h3>
+                    <div class="foro-comments-list">${commentsHtml}</div>
+                    <form id="foro-comment-form">
+                        <textarea id="foro-comment-input" rows="2" placeholder="Escribe un comentario..." required></textarea>
+                        <button type="submit" class="btn-foro-submit">Enviar</button>
+                    </form>
+                </div>`;
 
             content.querySelector('.btn-delete-post')?.addEventListener('click', async () => {
                 if (!confirm('Eliminar este post?')) return;

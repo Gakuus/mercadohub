@@ -793,16 +793,27 @@ main {
 .foro-header h1 {
     margin: 0;
     color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.5em;
+}
+
+.foro-header h1 svg {
+    color: #77ff00;
 }
 
 .btn-foro-nuevo {
-    padding: 10px 22px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 20px;
     background: #77ff00;
     color: #0f0f1a;
     border: none;
     border-radius: 12px;
     cursor: pointer;
-    font-size: 0.92em;
+    font-size: 0.88em;
     font-weight: 700;
     font-family: inherit;
     transition: background 0.2s, transform 0.1s;
@@ -817,12 +828,15 @@ main {
 }
 
 .btn-foro-back {
-    padding: 8px 18px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 18px;
     background: rgba(255, 255, 255, 0.06);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 10px;
     cursor: pointer;
-    font-size: 0.9em;
+    font-size: 0.88em;
     margin-bottom: 16px;
     color: rgba(255, 255, 255, 0.6);
     font-family: inherit;
@@ -833,13 +847,33 @@ main {
     background: rgba(255, 255, 255, 0.1);
 }
 
+.foro-empty-state {
+    text-align: center;
+    padding: 48px 20px;
+    color: rgba(255, 255, 255, 0.35);
+    display: none;
+}
+
+.foro-empty-state.active {
+    display: block;
+}
+
+.foro-empty-state svg {
+    margin-bottom: 12px;
+}
+
+.foro-empty-state p {
+    margin: 0;
+    font-size: 0.9em;
+}
+
 /* Post list */
 .foro-post-item {
     background: #1a1a2e;
     padding: 18px 22px;
     border-radius: 14px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     cursor: pointer;
     transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
     border: 1px solid rgba(255, 255, 255, 0.04);
@@ -851,46 +885,109 @@ main {
     border-color: rgba(119, 255, 0, 0.15);
 }
 
-.foro-post-titulo {
-    margin: 0 0 6px;
-    font-size: 1.15em;
-    color: #fff;
+.foro-post-top {
+    margin-bottom: 10px;
 }
 
-.foro-post-meta {
+.foro-post-titulo {
     margin: 0;
-    font-size: 0.85em;
-    color: rgba(255, 255, 255, 0.45);
+    font-size: 1.05em;
+    color: #fff;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.foro-post-bottom {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.foro-post-avatar {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65em;
+    font-weight: 700;
+    color: #0f0f1a;
+    flex-shrink: 0;
+}
+
+.foro-post-author {
+    font-size: 0.82em;
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 500;
+}
+
+.foro-post-sep {
+    color: rgba(255, 255, 255, 0.2);
+}
+
+.foro-post-date {
+    font-size: 0.78em;
+    color: rgba(255, 255, 255, 0.35);
+}
+
+.foro-post-comments {
+    font-size: 0.78em;
+    color: rgba(255, 255, 255, 0.4);
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    margin-left: auto;
 }
 
 /* Create post form */
 #foro-create-view {
     max-width: 600px;
     margin: 0 auto;
+}
+
+.foro-create-card {
     background: #1a1a2e;
-    padding: 28px;
     border-radius: 16px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
     border: 1px solid rgba(255, 255, 255, 0.06);
+    overflow: hidden;
 }
 
-#foro-create-view h1 {
+.foro-create-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 18px 24px;
+    background: rgba(255, 255, 255, 0.02);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
     color: #fff;
-    margin-top: 0;
-    margin-bottom: 20px;
-    font-size: 1.3em;
+    font-weight: 600;
+    font-size: 0.95em;
 }
 
-#foro-create-form label {
+.foro-create-header svg {
+    color: #77ff00;
+}
+
+#foro-create-form {
+    padding: 20px 24px 24px;
+}
+
+.foro-field {
+    margin-bottom: 16px;
+}
+
+.foro-field label {
     display: block;
     font-weight: 600;
-    margin-bottom: 4px;
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 0.88em;
+    margin-bottom: 6px;
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 0.85em;
 }
 
-#foro-create-form input[type="text"],
-#foro-create-form textarea {
+.foro-field input[type="text"],
+.foro-field textarea {
     width: 100%;
     padding: 11px 14px;
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -898,18 +995,22 @@ main {
     font-size: 0.92em;
     background: rgba(255, 255, 255, 0.06);
     color: #e0e0e0;
-    margin-bottom: 16px;
     font-family: inherit;
     outline: none;
     transition: border-color 0.2s;
 }
 
-#foro-create-form input[type="text"]:focus,
-#foro-create-form textarea:focus {
+.foro-field input[type="text"]:focus,
+.foro-field textarea:focus {
     border-color: #77ff00;
 }
 
-#foro-create-form textarea {
+.foro-field input::placeholder,
+.foro-field textarea::placeholder {
+    color: rgba(255, 255, 255, 0.25);
+}
+
+.foro-field textarea {
     resize: vertical;
 }
 
@@ -925,7 +1026,7 @@ main {
     border: none;
     border-radius: 10px;
     cursor: pointer;
-    font-size: 0.92em;
+    font-size: 0.9em;
     font-weight: 700;
     font-family: inherit;
     transition: background 0.2s;
@@ -942,9 +1043,10 @@ main {
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 10px;
     cursor: pointer;
-    font-size: 0.92em;
+    font-size: 0.9em;
     font-weight: 600;
     font-family: inherit;
+    transition: background 0.2s;
 }
 
 .btn-foro-cancel:hover {
@@ -953,8 +1055,16 @@ main {
 
 /* Post detail */
 #foro-detail-view {
-    max-width: 800px;
+    max-width: 720px;
     margin: 0 auto;
+}
+
+.foro-detail-card {
+    background: #1a1a2e;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    overflow: hidden;
+    margin-bottom: 16px;
 }
 
 .foro-detail-header {
@@ -962,112 +1072,164 @@ main {
     justify-content: space-between;
     align-items: flex-start;
     gap: 12px;
+    padding: 22px 24px 0;
 }
 
 .foro-detail-header h2 {
-    margin: 0 0 8px;
+    margin: 0;
     color: #fff;
-    font-size: 1.3em;
+    font-size: 1.25em;
+    font-weight: 700;
+    line-height: 1.3;
 }
 
 .btn-delete-post {
     padding: 6px 14px;
-    background-color: #dc3545;
-    color: #fff;
-    border: none;
+    background: rgba(220, 53, 69, 0.15);
+    color: #ff6b7a;
+    border: 1px solid rgba(220, 53, 69, 0.2);
     border-radius: 8px;
     cursor: pointer;
-    font-size: 0.82em;
+    font-size: 0.8em;
     white-space: nowrap;
     font-weight: 600;
+    font-family: inherit;
+    transition: background 0.2s;
+    flex-shrink: 0;
 }
 
 .btn-delete-post:hover {
-    background-color: #c82333;
+    background: rgba(220, 53, 69, 0.25);
 }
 
-.foro-detail-meta {
-    color: rgba(255, 255, 255, 0.45);
-    font-size: 0.9em;
-    margin-bottom: 16px;
+.foro-detail-author-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 24px 14px;
+    flex-wrap: wrap;
+}
+
+.foro-detail-author-row strong {
+    font-size: 0.88em;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 600;
 }
 
 .foro-detail-body {
-    background: #1a1a2e;
-    padding: 20px;
-    border-radius: 14px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    margin-bottom: 20px;
-    line-height: 1.6;
+    padding: 0 24px 22px;
+    line-height: 1.7;
     white-space: pre-wrap;
-    color: rgba(255, 255, 255, 0.85);
-    border: 1px solid rgba(255, 255, 255, 0.04);
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 0.92em;
+}
+
+.foro-comments-section {
+    background: #1a1a2e;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 20px 24px 24px;
 }
 
 .foro-comments-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
     color: #fff;
-    margin-bottom: 12px;
-    font-size: 1.1em;
+    margin: 0 0 16px;
+    font-size: 1em;
+    font-weight: 600;
+}
+
+.foro-comments-title svg {
+    color: #77ff00;
 }
 
 .foro-comments-list {
-    margin-bottom: 20px;
+    margin-bottom: 16px;
 }
 
 .foro-comment {
-    background: rgba(255, 255, 255, 0.04);
-    padding: 12px 16px;
-    border-radius: 10px;
-    margin-bottom: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.04);
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.foro-comment:last-child {
+    border-bottom: none;
+}
+
+.foro-comment-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.foro-comment-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.6em;
+    font-weight: 700;
+    color: #0f0f1a;
+    flex-shrink: 0;
 }
 
 .foro-comment strong {
-    color: #77ff00;
+    font-size: 0.85em;
     font-weight: 600;
+    color: rgba(255, 255, 255, 0.7);
 }
 
 .foro-comment-date {
-    color: rgba(255, 255, 255, 0.35);
-    font-size: 0.8em;
-    margin-left: 8px;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 0.75em;
 }
 
 .foro-comment p {
-    margin: 6px 0 0;
-    color: rgba(255, 255, 255, 0.7);
+    margin: 0 0 0 32px;
+    color: rgba(255, 255, 255, 0.6);
     text-align: left;
+    font-size: 0.88em;
+    line-height: 1.5;
 }
 
 .foro-no-comments {
-    color: rgba(255, 255, 255, 0.4);
+    color: rgba(255, 255, 255, 0.35);
     text-align: center;
     padding: 20px;
+    font-size: 0.9em;
 }
 
-#foro-comment-form label {
-    display: block;
-    font-weight: 600;
-    margin-bottom: 4px;
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 0.88em;
+#foro-comment-form {
+    display: flex;
+    gap: 8px;
+    align-items: flex-end;
 }
 
 #foro-comment-form textarea {
-    width: 100%;
-    padding: 11px 14px;
+    flex: 1;
+    padding: 10px 14px;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    font-size: 0.92em;
+    border-radius: 12px;
+    font-size: 0.88em;
     background: rgba(255, 255, 255, 0.06);
     color: #e0e0e0;
-    margin-bottom: 10px;
     font-family: inherit;
     outline: none;
+    resize: none;
+    transition: border-color 0.2s;
 }
 
 #foro-comment-form textarea:focus {
     border-color: #77ff00;
+}
+
+#foro-comment-form textarea::placeholder {
+    color: rgba(255, 255, 255, 0.25);
 }
 
 /* === Item Modal (Pinterest-style) === */
