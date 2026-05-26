@@ -1,40 +1,68 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <link rel="stylesheet" href="styles.css">
-    <title>Register</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crear Cuenta - MercadoHub</title>
+  <link rel="stylesheet" href="../auth/assets/auth.css">
 </head>
 <body>
-    <section>
-        <div class="form-box">
-            <div class="form-value">
-                <form id="register-form">
-                    <h2>Register</h2>
-                    <div class="inputbox">
-                        <ion-icon name="mail-outline"></ion-icon>
-                        <input type="email" id="register-email" name="email" required>
-                        <label for="register-email">Registrese con su email</label>
-                    </div>
-                    <div class="inputbox">
-                        <ion-icon name="person-outline"></ion-icon>
-                        <input type="text" id="register-nombre_usuario" name="nombre_usuario" required>
-                        <label for="register-nombre_usuario">Nombre de Usuario</label>
-                    </div>
-                    <div class="inputbox">
-                        <ion-icon name="lock-closed-outline"></ion-icon>
-                        <input type="password" id="register-contrasena" name="contrasena" required>
-                        <label for="register-contrasena">Crea una password</label>
-                    </div>
-                    <button type="submit">Registrarse</button>
-                    <div class="register">
-                        <p>Ya tiene una cuenta? <a href="/proyecto/Login/index.html">Logeate aqui</a></p>
-                    </div>
-                </form>
-            </div>
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-brand">
+        <h1>Mercado<span>Hub</span></h1>
+        <p>Unete a la comunidad de intercambio</p>
+      </div>
+
+      <div id="auth-alert" class="auth-alert" role="alert"></div>
+
+      <form id="register-form" novalidate>
+        <div class="form-group">
+          <label for="register-email">Correo electronico</label>
+          <div class="input-wrapper">
+            <input type="email" id="register-email" name="email" placeholder="tu@correo.com" required autocomplete="email">
+            <span class="input-icon">&#9993;</span>
+          </div>
+          <div class="field-error" id="reg-email-error">Correo electronico invalido.</div>
         </div>
-    </section>
-    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-    <script src="script.js"></script> 
+
+        <div class="form-group">
+          <label for="register-nombre_usuario">Nombre de usuario</label>
+          <div class="input-wrapper">
+            <input type="text" id="register-nombre_usuario" name="nombre_usuario" placeholder="Min. 3 caracteres" required autocomplete="username">
+            <span class="input-icon">&#128100;</span>
+          </div>
+          <div class="field-error" id="reg-username-error">Min. 3 caracteres, solo letras, numeros y guion bajo.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="register-contrasena">Contrasena</label>
+          <div class="input-wrapper">
+            <input type="password" id="register-contrasena" name="contrasena" placeholder="Min. 8 caracteres" required autocomplete="new-password">
+            <button type="button" class="toggle-password" aria-label="Mostrar contrasena" data-target="register-contrasena">&#128065;</button>
+          </div>
+          <div class="password-strength" id="pw-strength">
+            <div class="strength-bar" data-index="0"></div>
+            <div class="strength-bar" data-index="1"></div>
+            <div class="strength-bar" data-index="2"></div>
+          </div>
+          <div class="strength-text" id="pw-strength-text"></div>
+          <div class="field-error" id="reg-password-error">Min. 8 caracteres, incluye mayuscula, minuscula y numero.</div>
+        </div>
+
+        <button type="submit" class="btn-submit" id="register-btn">
+          <span class="spinner-btn"></span>
+          <span class="btn-text">Crear Cuenta</span>
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        ¿Ya tienes una cuenta? <a href="../Login/index.html">Iniciar sesion</a>
+      </div>
+    </div>
+  </div>
+
+  <script>window.BASE_URL = '';</script>
+  <script src="script.js"></script>
 </body>
 </html>

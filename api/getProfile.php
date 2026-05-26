@@ -1,6 +1,8 @@
 <?php
 session_start();
-require 'config.php';
+require_once __DIR__ . '/../config/database.php';
+
+header('Content-Type: application/json');
 
 if (!isset($_SESSION['user_id'])) {
     echo json_encode(['error' => 'No has iniciado sesión.']);
@@ -9,30 +11,20 @@ if (!isset($_SESSION['user_id'])) {
 
 $userId = $_SESSION['user_id'];
 
-// Conectar a la base de datos
-$conn = new mysqli($servername, $username, $password, $dbname);
+try {
+    $stmt = $pdo->prepare("SELECT nombre_usuario, img_perfil, bio FROM usuario WHERE id_usuario = ?");
+    $stmt->execute([$userId]);
+    $profileData = $stmt->fetch();
 
-// Verificar la conexión
-if ($conn->connect_error) {
-    die("Error de conexión: " . $conn->connect_error);
+    if ($profileData) {
+        if ($profileData['img_perfil']) {
+            $profileData['img_perfil'] = base64_encode($profileData['img_perfil']);
+        }
+        echo json_encode($profileData);
+    } else {
+        echo json_encode(['error' => 'Perfil no encontrado.']);
+    }
+} catch (Exception $e) {
+    echo json_encode(['error' => 'Error al obtener el perfil: ' . $e->getMessage()]);
 }
-
-// Obtener la información del perfil
-$sql = "SELECT nombre_usuario, FROM usuario WHERE id_usuario = ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $userId);
-$stmt->execute();
-$result = $stmt->get_result();
-
-if ($result->num_rows > 0) {
-    $profileData = $result->fetch_assoc();
-    // Asegurarse de que la imagen se devuelva en base64
-    $profileData['img_perfil'] = base64_encode($profileData['img_perfil']);
-    echo json_encode($profileData);
-} else {
-    echo json_encode(['error' => 'Perfil no encontrado.']);
-}
-
-$stmt->close();
-$conn->close();
 ?>

@@ -1,27 +1,40 @@
 <?php
 session_start();
-require 'config.php';
+require_once __DIR__ . '/../config/database.php';
+
+header('Content-Type: application/json');
 
 if (!isset($_SESSION['user_id'])) {
     echo json_encode(['error' => 'Usuario no autenticado']);
     exit;
 }
+require_csrf();
+check_rate_limit('update_profile', 5, 60);
 
 $user_id = $_SESSION['user_id'];
 
 try {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $bio = trim($_POST['bio'] ?? '');
         $imagen = $_FILES['imagen'] ?? null;
-        $imagenPath = '';
 
         if ($imagen && $imagen['tmp_name']) {
-            $imagenPath = 'uploads/' . uniqid() . '-' . $imagen['name'];
-            move_uploaded_file($imagen['tmp_name'], __DIR__ . '/../public/' . $imagenPath);
+            $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+            if (!in_array($imagen['type'], $allowedTypes)) {
+                echo json_encode(['error' => 'Tipo de archivo no permitido. Solo JPG, PNG, GIF y WebP.']);
+                exit;
+            }
 
-            $stmt = $pdo->prepare('UPDATE perfil SET imagen = ? WHERE usuario_id = ?');
-            $stmt->execute([$imagenPath, $user_id]);
+            $imageData = file_get_contents($imagen['tmp_name']);
+
+            $stmt = $pdo->prepare('UPDATE usuario SET img_perfil = ?, bio = ? WHERE id_usuario = ?');
+            $stmt->execute([$imageData, $bio, $user_id]);
+        } else {
+            $stmt = $pdo->prepare('UPDATE usuario SET bio = ? WHERE id_usuario = ?');
+            $stmt->execute([$bio, $user_id]);
         }
 
+        log_actividad('update_profile', 'Bio/imagen actualizada');
         echo json_encode(['success' => true, 'message' => 'Perfil actualizado exitosamente']);
     }
 } catch (Exception $e) {
