@@ -42,6 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let tradeTargetUserId = null;
     let tradeTargetItemId = null;
     let tradeSelectedItems = [];
+    let notifInterval = null;
 
     // === Toast ===
     function showToast(message, type = 'info') {
@@ -1380,6 +1381,86 @@ document.addEventListener('DOMContentLoaded', () => {
             loadTrades();
         });
     });
+
+    // === NOTIFICATIONS ===
+    async function checkNotifications() {
+        const bell = document.getElementById('notif-bell');
+        const badge = document.getElementById('notif-badge');
+        if (!bell || !badge) return;
+        try {
+            const data = await fetchJSON(`${BASE_URL}/api/getNotifications.php`);
+            if (data.error) return;
+            if (data.total > 0) {
+                badge.textContent = data.total > 9 ? '9+' : data.total;
+                badge.style.display = '';
+            } else {
+                badge.style.display = 'none';
+            }
+        } catch (e) { /* silent */ }
+    }
+
+    function renderNotifDropdown(data) {
+        const list = document.getElementById('notif-list');
+        if (!list) return;
+        list.innerHTML = '';
+        if (data.pending_trades.length === 0) {
+            list.innerHTML = '<div class="notif-empty">Sin notificaciones nuevas</div>';
+            return;
+        }
+        data.pending_trades.forEach(t => {
+            const div = document.createElement('div');
+            div.className = 'notif-item';
+            div.innerHTML = `
+                <div class="notif-item-icon">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+                </div>
+                <div class="notif-item-body">
+                    <div class="notif-item-title">Nuevo intercambio</div>
+                    <div class="notif-item-desc">${t.solicitante_nombre} quiere intercambiar ${t.items_ofrecidos} item(s) por ${t.items_solicitados} tuyo(s).</div>
+                </div>
+            `;
+            div.addEventListener('click', () => {
+                document.getElementById('notif-dropdown').style.display = 'none';
+                showSection('intercambios');
+                navLinks.forEach(l => l.classList.toggle('active', l.getAttribute('data-section') === 'intercambios'));
+                loadTrades();
+            });
+            list.appendChild(div);
+        });
+        const link = document.createElement('a');
+        link.href = '#';
+        link.className = 'notif-link';
+        link.textContent = 'Ver todos los intercambios';
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('notif-dropdown').style.display = 'none';
+            showSection('intercambios');
+            navLinks.forEach(l => l.classList.toggle('active', l.getAttribute('data-section') === 'intercambios'));
+            loadTrades();
+        });
+        list.appendChild(link);
+    }
+
+    // Bell click
+    document.getElementById('notif-bell')?.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const dd = document.getElementById('notif-dropdown');
+        if (dd.style.display === 'block') { dd.style.display = 'none'; return; }
+        dd.style.display = 'block';
+        try {
+            const data = await fetchJSON(`${BASE_URL}/api/getNotifications.php`);
+            if (!data.error) renderNotifDropdown(data);
+        } catch (e) { /* silent */ }
+    });
+
+    // Close dropdown on outside click
+    document.addEventListener('click', (e) => {
+        const dd = document.getElementById('notif-dropdown');
+        if (dd && !e.target.closest('.nav-notif-wrap')) dd.style.display = 'none';
+    });
+
+    // Start polling
+    notifInterval = setInterval(checkNotifications, 30000);
 
     // Mobile nav toggle
     if (navToggle) {
