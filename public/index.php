@@ -22,48 +22,31 @@ $isAdmin = is_admin();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MercadoHub</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <a class="navbar-brand" href="#" data-section="items-disponibles">MercadoHub</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="#" data-section="items-disponibles">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" data-section="intercambio">Agregar Item</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" data-section="inicio">Sobre nosotros</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" data-section="reglas">Reglas</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" data-section="foro">Foro</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" data-section="perfil">Perfil</a>
-                    </li>
+        <nav class="main-nav">
+            <div class="nav-inner">
+                <a href="#" class="nav-brand" data-section="items-disponibles">Mercado<span>Hub</span></a>
+                <button class="nav-toggle" aria-label="Menu" id="nav-toggle">
+                    <span></span><span></span><span></span>
+                </button>
+                <div class="nav-menu" id="nav-menu">
+                    <a class="nav-link active" href="#" data-section="items-disponibles">Home</a>
+                    <a class="nav-link" href="#" data-section="intercambio">Agregar Item</a>
+                    <a class="nav-link" href="#" data-section="inicio">Sobre nosotros</a>
+                    <a class="nav-link" href="#" data-section="reglas">Reglas</a>
+                    <a class="nav-link" href="#" data-section="foro">Foro</a>
+                    <a class="nav-link" href="#" data-section="perfil">Perfil</a>
                     <?php if ($isAdmin): ?>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" data-section="admin">Admin</a>
-                    </li>
+                    <a class="nav-link" href="#" data-section="admin">Admin</a>
                     <?php endif; ?>
-
-                    <li class="nav-item">
-                        <form action="<?= BASE_URL ?>/auth/logout.php" method="post">
-                            <button type="submit" class="btn btn-link nav-link">Cerrar Sesion</button>
-                        </form>
-                    </li>
-                </ul>
+                    <form action="<?= BASE_URL ?>/auth/logout.php" method="post" class="nav-logout-form">
+                        <button type="submit" class="nav-logout-btn">Cerrar Sesion</button>
+                    </form>
+                </div>
             </div>
         </nav>
     </header>
@@ -166,26 +149,32 @@ Veracidad en la Informacion: Es fundamental que toda la informacion proporcionad
         <!-- ============ ITEM DETAIL MODAL ============ -->
         <div id="item-modal" class="modal-overlay" style="display:none;">
             <div class="modal-content item-detail-modal">
-                <button id="item-modal-close" class="modal-close">&times;</button>
-                <div id="item-modal-layout">
-                    <div id="item-modal-left">
-                        <div id="item-modal-image"></div>
-                    </div>
-                    <div id="item-modal-right">
-                        <div id="item-modal-info"></div>
-                        <div id="item-modal-comments">
-                            <h3 class="section-title">Comentarios</h3>
-                            <div id="item-comments-list"></div>
-                            <form id="item-comment-form">
-                                <textarea id="item-comment-input" rows="2" placeholder="Agrega un comentario..." required></textarea>
-                                <button type="submit" class="btn-comment-submit">Comentar</button>
-                            </form>
+                <button id="item-modal-close" class="modal-close">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+                <div class="modal-scroll">
+                    <div id="item-modal-layout">
+                        <div id="item-modal-left">
+                            <div id="item-modal-image"></div>
+                        </div>
+                        <div id="item-modal-right">
+                            <div id="item-modal-info"></div>
+                            <div id="item-modal-divider"></div>
+                            <div id="item-modal-comments">
+                                <div id="item-comments-list"></div>
+                                <form id="item-comment-form">
+                                    <input type="text" id="item-comment-input" placeholder="Agrega un comentario..." required autocomplete="off">
+                                    <button type="submit" class="btn-comment-submit">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div id="item-modal-related">
-                    <h3 class="section-title">Tambien te puede interesar</h3>
-                    <div id="related-items-grid"></div>
+                    <div id="item-modal-related">
+                        <h3 class="section-title">Tambien te puede interesar</h3>
+                        <div id="related-items-grid"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -287,9 +276,6 @@ Veracidad en la Informacion: Es fundamental que toda la informacion proporcionad
         window.IS_ADMIN = <?= $isAdmin ? 'true' : 'false' ?>;
         window.CURRENT_USER_ID = <?= json_encode($_SESSION['user_id'] ?? 0) ?>;
     </script>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

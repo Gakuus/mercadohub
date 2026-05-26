@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     const sections = document.querySelectorAll('.section');
-    const navLinks = document.querySelectorAll('nav a');
+    const navLinks = document.querySelectorAll('.nav-link');
+    const navToggle = document.getElementById('nav-toggle');
+    const navMenu = document.getElementById('nav-menu');
     const itemList = document.getElementById('items-disponibles-lista');
     const categoriaFilter = document.getElementById('categoria-filter');
     const categoriasSelectForm = document.getElementById('item-categoria');
@@ -93,27 +95,57 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // === Items ===
+    const userColors = {};
+    const getUserColor = (name) => {
+        if (userColors[name]) return userColors[name];
+        const colors = ['#77ff00', '#ff6b7a', '#ffa502', '#3498db', '#a855f7', '#ec4899', '#14b8a6', '#f97316'];
+        let hash = 0;
+        for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+        userColors[name] = colors[Math.abs(hash) % colors.length];
+        return userColors[name];
+    };
+    const getInitials = (name) => name.charAt(0).toUpperCase();
+
     const createItemElement = ({ img, nombre, descripcion, precio, usuario, categoria, id, esPropio, id_usuario }) => {
         const div = document.createElement('div');
         div.classList.add('item');
         div.dataset.id = id;
 
-        const imgHtml = img ? `<img src="${img}" alt="${nombre}" loading="lazy">` : '';
-        const precioHtml = precio ? `<span class="item-precio">$${parseFloat(precio).toFixed(2)}</span>` : '';
+        const imgHtml = img
+            ? `<div class="item-img-wrap"><img src="${img}" alt="${nombre}" loading="lazy"></div>`
+            : `<div class="item-img-placeholder">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+               </div>`;
+        const precioHtml = precio
+            ? `<span class="item-precio-badge">$${parseFloat(precio).toFixed(2)}</span>`
+            : '';
+        const userColor = getUserColor(usuario);
         let actionsHtml = '';
         if (esPropio) {
             actionsHtml = `<div class="item-actions">
-                <button class="btn-edit" data-id="${id}">Editar</button>
-                <button class="btn-delete" data-id="${id}">Eliminar</button>
+                <button class="btn-edit" data-id="${id}">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                </button>
+                <button class="btn-delete" data-id="${id}">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                </button>
             </div>`;
         }
 
         div.innerHTML = `
             ${imgHtml}
             <div class="item-info">
-                <span class="item-name">${nombre}</span>
-                ${precioHtml}
-                <span class="item-meta"><a href="#" class="item-user-link" data-userid="${id_usuario}">${usuario}</a> &middot; ${categoria}</span>
+                <div class="item-info-top">
+                    <span class="item-name">${nombre}</span>
+                    ${precioHtml}
+                </div>
+                <span class="item-meta">
+                    <span class="item-cat-badge">${categoria}</span>
+                </span>
+                <div class="item-user-row">
+                    <span class="item-user-avatar" style="background:${userColor}">${getInitials(usuario)}</span>
+                    <a href="#" class="item-user-link" data-userid="${id_usuario}">${usuario}</a>
+                </div>
             </div>
             ${actionsHtml}
         `;
@@ -214,36 +246,49 @@ document.addEventListener('DOMContentLoaded', () => {
         const infoContainer = document.getElementById('item-modal-info');
         const commentsList = document.getElementById('item-comments-list');
         const relatedGrid = document.getElementById('related-items-grid');
+        const divider = document.getElementById('item-modal-divider');
 
         imgContainer.innerHTML = '<div class="spinner"></div>';
         infoContainer.innerHTML = '';
         commentsList.innerHTML = '';
         relatedGrid.innerHTML = '';
+        if (divider) divider.style.display = 'none';
         itemModal.style.display = 'flex';
+        requestAnimationFrame(() => itemModal.classList.add('open'));
 
         try {
             const itemData = allItems.find(i => i.id == id);
             if (!itemData) throw new Error('Item no encontrado');
 
             const imgHtml = itemData.img
-                ? `<img src="${itemData.img}" alt="${itemData.nombre}" class="detail-img">`
-                : '';
+                ? `<img src="${itemData.img}" alt="${itemData.nombre}" class="detail-img" loading="lazy">`
+                : `<div class="detail-img-placeholder">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                   </div>`;
             const precioHtml = itemData.precio
-                ? `<p class="detail-precio">$${parseFloat(itemData.precio).toFixed(2)}</p>`
+                ? `<div class="detail-precio-tag">$${parseFloat(itemData.precio).toFixed(2)}</div>`
                 : '';
             const descHtml = itemData.descripcion
                 ? `<p class="detail-desc">${itemData.descripcion}</p>`
                 : '';
             const userLink = itemData.esPropio
-                ? itemData.usuario
-                : `<a href="#" class="detail-user-link" data-userid="${itemData.id_usuario}">${itemData.usuario}</a>`;
+                ? `<span class="detail-user-self">${itemData.usuario}</span>`
+                : `<a href="#" class="detail-user-link" data-userid="${itemData.id_usuario}">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    ${itemData.usuario}
+                   </a>`;
 
             imgContainer.innerHTML = imgHtml;
             infoContainer.innerHTML = `
-                <h2 class="detail-title">${itemData.nombre}</h2>
-                ${precioHtml}
+                <div class="detail-header">
+                    <h2 class="detail-title">${itemData.nombre}</h2>
+                    ${precioHtml}
+                </div>
+                <div class="detail-meta-row">
+                    <span class="detail-cat">${itemData.categoria}</span>
+                    <span class="detail-user">${userLink}</span>
+                </div>
                 ${descHtml}
-                <p class="detail-meta">Categoria: ${itemData.categoria} &middot; Usuario: ${userLink}</p>
             `;
 
             const userLinkEl = infoContainer.querySelector('.detail-user-link');
@@ -251,9 +296,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 userLinkEl.addEventListener('click', (e) => {
                     e.preventDefault();
                     itemModal.style.display = 'none';
+                    itemModal.classList.remove('open');
                     openPublicProfile(userLinkEl.dataset.userid);
                 });
             }
+
+            if (divider) divider.style.display = 'block';
 
             // Load comments
             loadItemComments(id);
@@ -263,6 +311,12 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (err) {
             infoContainer.innerHTML = `<p class="error-msg">${err.message}</p>`;
         }
+    }
+
+    // Modal close with animation
+    function closeItemModal() {
+        itemModal.classList.remove('open');
+        setTimeout(() => { itemModal.style.display = 'none'; }, 200);
     }
 
     async function loadItemComments(itemId) {
@@ -281,7 +335,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
                     });
                     div.innerHTML = `
-                        <strong>${c.autor}</strong> <span class="comment-date">${fecha}</span>
+                        <div class="item-comment-header">
+                            <strong>${c.autor}</strong>
+                            <span class="comment-date">${fecha}</span>
+                        </div>
                         <p>${c.contenido}</p>
                     `;
                     commentsList.appendChild(div);
@@ -346,9 +403,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    itemModalClose.addEventListener('click', () => { itemModal.style.display = 'none'; currentModalItemId = null; });
+    itemModalClose.addEventListener('click', () => { closeItemModal(); currentModalItemId = null; });
     itemModal.addEventListener('click', (e) => {
-        if (e.target === itemModal) { itemModal.style.display = 'none'; currentModalItemId = null; }
+        if (e.target === itemModal) { closeItemModal(); currentModalItemId = null; }
     });
 
     // === Edit Item Modal ===
@@ -812,6 +869,14 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (err) { showToast('Error: ' + err.message, 'error'); }
     });
 
+    // Mobile nav toggle
+    if (navToggle) {
+        navToggle.addEventListener('click', () => {
+            navToggle.classList.toggle('open');
+            navMenu.classList.toggle('open');
+        });
+    }
+
     // === Navigation ===
     navLinks.forEach(link => link.addEventListener('click', (event) => {
         event.preventDefault();
@@ -820,6 +885,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (sectionId === 'perfil') { loadProfile(); loadProfileItems(); }
         if (sectionId === 'foro') { showForoListView(); loadForoPosts(); }
         if (sectionId === 'admin') { loadAdminUsers(); loadAdminCategorias(); }
+        // Close mobile menu
+        if (navToggle) navToggle.classList.remove('open');
+        if (navMenu) navMenu.classList.remove('open');
     }));
 
     // === Fix profile edit CSRF ===
