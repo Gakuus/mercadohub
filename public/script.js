@@ -66,8 +66,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 skeleton.appendChild(div);
             }
             skeleton.classList.add('active');
+            if (itemList) itemList.style.display = 'none';
         } else if (skeleton) {
             skeleton.classList.remove('active');
+            if (itemList) itemList.style.display = '';
         }
         itemsLoader.classList.toggle('active', show);
     }
