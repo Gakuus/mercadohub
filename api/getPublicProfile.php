@@ -48,9 +48,53 @@ try {
         unset($item['img_path']);
     }
 
+    // Fetch completed trades
+    $stmt = $pdo->prepare("
+        SELECT i.id_intercambio, i.estado, i.created_at,
+               s.id_usuario AS solicitante_id, s.nombre_usuario AS solicitante_nombre,
+               r.id_usuario AS receptor_id, r.nombre_usuario AS receptor_nombre
+        FROM intercambios i
+        INNER JOIN usuario s ON i.id_solicitante = s.id_usuario
+        INNER JOIN usuario r ON i.id_receptor = r.id_usuario
+        WHERE (i.id_solicitante = ? OR i.id_receptor = ?) AND i.estado = 'aceptado'
+        ORDER BY i.created_at DESC
+        LIMIT 20
+    ");
+    $stmt->execute([$profileId, $profileId]);
+    $trades = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    foreach ($trades as &$trade) {
+        $otherName = ((int)$trade['solicitante_id'] === $profileId) ? $trade['receptor_nombre'] : $trade['solicitante_nombre'];
+        $otherId = ((int)$trade['solicitante_id'] === $profileId) ? $trade['receptor_id'] : $trade['solicitante_id'];
+        $trade['contraparte_nombre'] = $otherName;
+        $trade['contraparte_id'] = (int)$otherId;
+        $trade['rol'] = ((int)$trade['solicitante_id'] === $profileId) ? 'solicitante' : 'receptor';
+        unset($trade['solicitante_id'], $trade['solicitante_nombre'], $trade['receptor_id'], $trade['receptor_nombre']);
+
+        // Get items for this trade (limit to 4 items per side for summary)
+        $itStmt = $pdo->prepare("
+            SELECT ii.lado, items.nombre_items
+            FROM intercambio_items ii
+            INNER JOIN items ON ii.id_items = items.id_items
+            WHERE ii.id_intercambio = ?
+        ");
+        $itStmt->execute([$trade['id_intercambio']]);
+        $tradeItems = $itStmt->fetchAll(PDO::FETCH_ASSOC);
+        $trade['items_ofrecidos'] = [];
+        $trade['items_solicitados'] = [];
+        foreach ($tradeItems as $ti) {
+            if ($ti['lado'] === 'ofrece') {
+                $trade['items_ofrecidos'][] = $ti['nombre_items'];
+            } else {
+                $trade['items_solicitados'][] = $ti['nombre_items'];
+            }
+        }
+    }
+
     echo json_encode([
         'user' => $user,
         'items' => $items,
+        'trades' => $trades,
     ]);
 } catch (Exception $e) {
     echo json_encode(['error' => 'Error al obtener perfil: ' . $e->getMessage()]);

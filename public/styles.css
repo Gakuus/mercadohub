@@ -1270,7 +1270,7 @@ main {
 
 .trade-item-mini span {
     font-size: 0.85em;
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--text-muted);
 }
 
 .trade-card-arrow {
@@ -2802,7 +2802,7 @@ main {
     padding: 10px;
     border-radius: 12px;
     text-align: center;
-    border: 1px solid rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border);
 }
 
 .pp-item img {
@@ -2814,7 +2814,7 @@ main {
 
 .pp-item-name {
     display: block;
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--text-muted);
     font-size: 0.82em;
     font-weight: 500;
 }
@@ -2829,6 +2829,50 @@ main {
     text-align: center;
     padding: 20px;
     font-size: 0.9em;
+}
+
+.pp-trades {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.pp-trade {
+    background: var(--input-bg);
+    border-radius: 10px;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+}
+.pp-trade-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+.pp-trade-other {
+    font-weight: 600;
+    color: var(--accent);
+    cursor: pointer;
+    font-size: 0.88em;
+}
+.pp-trade-other:hover {
+    text-decoration: underline;
+}
+.pp-trade-date {
+    color: var(--text-muted2);
+    font-size: 0.78em;
+}
+.pp-trade-items {
+    color: var(--text-muted);
+    font-size: 0.82em;
+    line-height: 1.6;
+}
+.pp-trade-label {
+    color: var(--text-muted2);
+    font-weight: 600;
+    margin-right: 2px;
+}
+.pp-trade-label + .pp-trade-label {
+    margin-left: 8px;
 }
 
 /* === Info Cards (Sobre Nosotros / Reglas) === */
@@ -3256,7 +3300,7 @@ main {
 }
 
 .admin-cat-row span {
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--text-muted);
 }
 
 .admin-inline-form input[type="text"] {

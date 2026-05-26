@@ -678,19 +678,53 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const fecha = new Date(user.created_at).toLocaleDateString('es-AR', { year: 'numeric', month: 'long', day: 'numeric' });
+
+            // Trades history
+            let tradesHtml = '';
+            if (data.trades && data.trades.length > 0) {
+                tradesHtml = '<div class="pp-section"><h3 class="pp-section-title">Historial de intercambios</h3><div class="pp-trades">';
+                data.trades.forEach(t => {
+                    const d = new Date(t.created_at).toLocaleDateString('es-AR', { year: 'numeric', month: 'short', day: 'numeric' });
+                    const ofrecidos = t.items_ofrecidos.join(', ');
+                    const solicitados = t.items_solicitados.join(', ');
+                    tradesHtml += `
+                        <div class="pp-trade">
+                            <div class="pp-trade-header">
+                                <span class="pp-trade-other" data-other-id="${t.contraparte_id}">${t.contraparte_nombre}</span>
+                                <span class="pp-trade-date">${d}</span>
+                            </div>
+                            <div class="pp-trade-items">
+                                <span class="pp-trade-label">Dio:</span> ${ofrecidos}
+                                <span class="pp-trade-label">Recibio:</span> ${solicitados}
+                            </div>
+                        </div>`;
+                });
+                tradesHtml += '</div></div>';
+            }
+
             publicProfileBody.innerHTML = `
                 <div class="pp-header">
                     ${imgHtml}
                     <h2>${user.nombre_usuario}</h2>
                     <p class="pp-bio">${user.bio || 'Sin biografia aun.'}</p>
-                    <p class="pp-meta">Miembro desde ${fecha} &middot; ${data.items.length} items</p>
+                    <p class="pp-meta">Miembro desde ${fecha} &middot; ${data.items.length} items &middot; ${data.trades ? data.trades.length : 0} intercambios</p>
                 </div>
                 <div class="pp-section">
                     <h3 class="pp-section-title">Items de ${user.nombre_usuario}</h3>
                     ${itemsHtml}
-                </div>`;
+                </div>
+                ${tradesHtml}`;
             publicProfileModal.style.display = 'flex';
             requestAnimationFrame(() => publicProfileModal.classList.add('open'));
+
+            // Click handlers for trade partner names
+            publicProfileBody.querySelectorAll('.pp-trade-other').forEach(el => {
+                el.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const id = parseInt(el.dataset.otherId);
+                    if (id) openPublicProfile(id);
+                });
+            });
         } catch (err) { showToast('Error al cargar perfil: ' + err.message, 'error'); }
     }
 
