@@ -59,7 +59,6 @@ try {
         }
         unset($i['img_path']);
         $i['esPropio'] = (int)$i['id_usuario'] === (int)$userId;
-        unset($i['id_usuario']);
     }
 
     echo json_encode($items);
