@@ -12,7 +12,7 @@ require_admin();
 require_csrf();
 check_rate_limit('admin_categoria', 10, 60);
 
-$input = json_decode(file_get_contents('php://input'), true);
+$input = get_json_body();
 $nombre = trim($input['nombre'] ?? '');
 
 if (empty($nombre)) {

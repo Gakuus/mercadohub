@@ -12,7 +12,7 @@ require_csrf();
 check_rate_limit('respond_trade', 10, 60);
 
 $user_id = (int)$_SESSION['user_id'];
-$input = json_decode(file_get_contents('php://input'), true);
+$input = get_json_body();
 
 $tradeId = (int)($input['id_intercambio'] ?? 0);
 $accion = $input['accion'] ?? ''; // aceptar or rechazar

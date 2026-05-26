@@ -13,7 +13,7 @@ check_rate_limit('delete_item', 20, 60);
 
 $user_id = $_SESSION['user_id'];
 
-$data = json_decode(file_get_contents('php://input'), true);
+$data = get_json_body();
 $id_items = (int)($data['id_items'] ?? 0);
 
 if ($id_items <= 0) {

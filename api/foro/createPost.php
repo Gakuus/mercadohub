@@ -12,7 +12,7 @@ require_csrf();
 check_rate_limit('forum_post', 5, 60);
 
 $user_id = $_SESSION['user_id'];
-$input = json_decode(file_get_contents('php://input'), true);
+$input = get_json_body();
 $titulo = trim($input['titulo'] ?? '');
 $contenido = trim($input['contenido'] ?? '');
 

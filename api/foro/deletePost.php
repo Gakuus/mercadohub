@@ -12,7 +12,7 @@ require_csrf();
 check_rate_limit('forum_delete', 10, 60);
 
 $user_id = $_SESSION['user_id'];
-$input = json_decode(file_get_contents('php://input'), true);
+$input = get_json_body();
 $id_post = (int)($input['id_post'] ?? 0);
 
 if ($id_post <= 0) {

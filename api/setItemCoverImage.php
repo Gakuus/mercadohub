@@ -13,7 +13,7 @@ check_rate_limit('set_item_cover', 10, 60);
 
 $user_id = $_SESSION['user_id'];
 
-$input = json_decode(file_get_contents('php://input'), true);
+$input = get_json_body();
 $imageId = (int)($input['id'] ?? 0);
 
 if ($imageId <= 0) {

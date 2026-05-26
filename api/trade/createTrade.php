@@ -12,7 +12,7 @@ require_csrf();
 check_rate_limit('create_trade', 5, 60);
 
 $user_id = (int)$_SESSION['user_id'];
-$input = json_decode(file_get_contents('php://input'), true);
+$input = get_json_body();
 
 $receptor_id = (int)($input['id_receptor'] ?? 0);
 $items_ofrecidos = $input['items_ofrecidos'] ?? []; // array of item IDs

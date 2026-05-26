@@ -139,13 +139,29 @@ function validate_csrf(?string $token): bool {
 }
 
 function require_csrf(): void {
-    $input = json_decode(file_get_contents('php://input'), true);
+    $raw = _get_json_input();
+    $input = json_decode($raw, true);
     $token = $input['csrf_token'] ?? $_POST['csrf_token'] ?? '';
     if (!validate_csrf($token)) {
         http_response_code(403);
         echo json_encode(['error' => 'Token CSRF invalido.']);
         exit;
     }
+}
+
+function _get_json_input(): string {
+    static $cached = null;
+    if ($cached === null) {
+        $cached = file_get_contents('php://input');
+    }
+    return $cached;
+}
+
+function get_json_body(): ?array {
+    $raw = _get_json_input();
+    if ($raw === '') return null;
+    $decoded = json_decode($raw, true);
+    return is_array($decoded) ? $decoded : null;
 }
 
 function check_rate_limit(string $action, int $max = 10, int $window = 60): void {
