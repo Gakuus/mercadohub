@@ -242,31 +242,40 @@ Veracidad en la Informacion: Es fundamental que toda la informacion proporcionad
 
         <!-- ============ PERFIL ============ -->
         <section id="perfil" class="section">
-            <h1>Mi Perfil</h1>
-            <img id="profile-image" src="" alt="Imagen de Perfil">
-            <p id="profile-name"></p>
-            <p id="profile-bio"></p>
-
-            <button id="btn-editar-perfil" class="btn-edit-profile">Editar perfil</button>
-
-            <div id="profile-edit-form" style="display:none;">
-                <h3>Editar perfil</h3>
-                <form id="profile-edit">
-                    <label for="profile-bio-input">Biografia:</label>
-                    <textarea id="profile-bio-input" rows="3"></textarea>
-
-                    <label for="profile-image-input">Foto de perfil:</label>
-                    <input type="file" id="profile-image-input" accept="image/*">
-
-                    <div class="profile-edit-actions">
-                        <button type="submit" class="btn-save-profile">Guardar</button>
-                        <button type="button" id="btn-cancelar-editar-perfil" class="btn-cancel">Cancelar</button>
+            <div class="profile-card">
+                <div class="profile-card-header">
+                    <div class="profile-avatar-wrap">
+                        <img id="profile-image" src="" alt="Imagen de Perfil">
                     </div>
-                </form>
+                    <h1 id="profile-name"></h1>
+                    <p id="profile-bio"></p>
+                    <button id="btn-editar-perfil" class="btn-edit-profile">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                        Editar perfil
+                    </button>
+                </div>
+
+                <div id="profile-edit-form" style="display:none;">
+                    <h3>Editar perfil</h3>
+                    <form id="profile-edit">
+                        <label for="profile-bio-input">Biografia:</label>
+                        <textarea id="profile-bio-input" rows="3" placeholder="Cuenta algo sobre ti..."></textarea>
+
+                        <label for="profile-image-input">Foto de perfil:</label>
+                        <input type="file" id="profile-image-input" accept="image/*">
+
+                        <div class="profile-edit-actions">
+                            <button type="submit" class="btn-save-profile">Guardar cambios</button>
+                            <button type="button" id="btn-cancelar-editar-perfil" class="btn-cancel">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
             </div>
 
-            <h2 id="profile-items-title">Mis Items</h2>
-            <div id="profile-items-list"></div>
+            <div class="profile-items-section">
+                <h2 id="profile-items-title">Mis Items</h2>
+                <div id="profile-items-list"></div>
+            </div>
         </section>
     </main>
 
