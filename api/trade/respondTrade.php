@@ -43,12 +43,41 @@ try {
     }
 
     $nuevoEstado = $accion === 'aceptar' ? 'aceptado' : 'rechazado';
+
+    if ($accion === 'aceptar') {
+        // Transfer ownership of items
+        $itemsStmt = $pdo->prepare("SELECT id_items, lado FROM intercambio_items WHERE id_intercambio = ?");
+        $itemsStmt->execute([$tradeId]);
+        $items = $itemsStmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $pdo->beginTransaction();
+
+        foreach ($items as $item) {
+            // Offered items (by solicitante) -> go to receptor
+            // Requested items (from receptor) -> go to solicitante
+            $newOwnerId = $item['lado'] === 'ofrece'
+                ? (int)$trade['id_receptor']
+                : (int)$trade['id_solicitante'];
+
+            $updateStmt = $pdo->prepare("UPDATE items SET id_usuario = ? WHERE id_items = ?");
+            $updateStmt->execute([$newOwnerId, (int)$item['id_items']]);
+        }
+
+    }
+
     $stmt2 = $pdo->prepare("UPDATE intercambios SET estado = ? WHERE id_intercambio = ?");
     $stmt2->execute([$nuevoEstado, $tradeId]);
+
+    if ($accion === 'aceptar') {
+        $pdo->commit();
+    }
 
     log_actividad('respond_trade', "Intercambio ID: $tradeId, Accion: $accion");
     echo json_encode(['message' => 'Intercambio ' . ($nuevoEstado) . ' correctamente.']);
 } catch (Exception $e) {
+    if (isset($pdo) && $accion === 'aceptar') {
+        try { $pdo->rollBack(); } catch (Exception $ignored) {}
+    }
     echo json_encode(['error' => 'Error al responder intercambio: ' . $e->getMessage()]);
 }
 ?>
