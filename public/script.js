@@ -450,6 +450,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
         editItemModal.style.display = 'flex';
+        requestAnimationFrame(() => editItemModal.classList.add('open'));
     }
 
     editItemForm.addEventListener('submit', async (e) => {
@@ -492,9 +493,13 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (err) { showToast('Error: ' + err.message, 'error'); }
     }
 
-    editItemClose.addEventListener('click', () => editItemModal.style.display = 'none');
-    editItemCancel.addEventListener('click', () => editItemModal.style.display = 'none');
-    editItemModal.addEventListener('click', (e) => { if (e.target === editItemModal) editItemModal.style.display = 'none'; });
+    function closeEditModal() {
+        editItemModal.classList.remove('open');
+        setTimeout(() => { editItemModal.style.display = 'none'; }, 200);
+    }
+    editItemClose.addEventListener('click', closeEditModal);
+    editItemCancel.addEventListener('click', closeEditModal);
+    editItemModal.addEventListener('click', (e) => { if (e.target === editItemModal) closeEditModal(); });
 
     // === Public Profile Modal ===
     async function openPublicProfile(userId) {
@@ -502,35 +507,53 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await fetchJSON(`${BASE_URL}/api/getPublicProfile.php?id=${userId}`);
             if (data.error) throw new Error(data.error);
             const user = data.user;
+            const avatarColor = getUserColor(user.nombre_usuario);
+            const initial = getInitials(user.nombre_usuario);
             const imgHtml = user.img_perfil
-                ? `<img src="data:image/png;base64,${user.img_perfil}" alt="${user.nombre_usuario}" class="public-profile-img">` : '';
+                ? `<img src="data:image/png;base64,${user.img_perfil}" alt="${user.nombre_usuario}" class="pp-avatar">`
+                : `<div class="pp-avatar pp-avatar-placeholder" style="background:${avatarColor}">${initial}</div>`;
 
             let itemsHtml = '';
             if (data.items.length > 0) {
-                itemsHtml = '<div class="public-profile-items">';
+                itemsHtml = '<div class="pp-items">';
                 data.items.forEach(item => {
                     const priceHtml = item.items_precio
                         ? `<span class="item-precio">$${parseFloat(item.items_precio).toFixed(2)}</span>` : '';
                     const itemImg = item.img ? `<img src="${item.img}" alt="${item.nombre_items}" loading="lazy">` : '';
-                    itemsHtml += `<div class="public-profile-item">${itemImg}<span class="profile-item-name">${item.nombre_items}</span>${priceHtml}</div>`;
+                    itemsHtml += `<div class="pp-item">${itemImg}<span class="pp-item-name">${item.nombre_items}</span>${priceHtml}</div>`;
                 });
                 itemsHtml += '</div>';
             } else {
-                itemsHtml = '<p class="no-comments">Este usuario no ha publicado items aun.</p>';
+                itemsHtml = '<p class="pp-empty">Este usuario no ha publicado items aun.</p>';
             }
 
             const fecha = new Date(user.created_at).toLocaleDateString('es-AR', { year: 'numeric', month: 'long', day: 'numeric' });
             publicProfileBody.innerHTML = `
-                ${imgHtml}<h2>${user.nombre_usuario}</h2>
-                <p class="public-profile-bio">${user.bio || 'Sin biografia aun.'}</p>
-                <p class="public-profile-meta">Miembro desde ${fecha} &middot; ${data.items.length} items</p>
-                <h3>Items de ${user.nombre_usuario}</h3>${itemsHtml}`;
+                <div class="pp-header">
+                    ${imgHtml}
+                    <h2>${user.nombre_usuario}</h2>
+                    <p class="pp-bio">${user.bio || 'Sin biografia aun.'}</p>
+                    <p class="pp-meta">Miembro desde ${fecha} &middot; ${data.items.length} items</p>
+                </div>
+                <div class="pp-section">
+                    <h3 class="pp-section-title">Items de ${user.nombre_usuario}</h3>
+                    ${itemsHtml}
+                </div>`;
             publicProfileModal.style.display = 'flex';
+            requestAnimationFrame(() => publicProfileModal.classList.add('open'));
         } catch (err) { showToast('Error al cargar perfil: ' + err.message, 'error'); }
     }
 
-    publicProfileClose.addEventListener('click', () => publicProfileModal.style.display = 'none');
-    publicProfileModal.addEventListener('click', (e) => { if (e.target === publicProfileModal) publicProfileModal.style.display = 'none'; });
+    publicProfileClose.addEventListener('click', () => {
+        publicProfileModal.classList.remove('open');
+        setTimeout(() => { publicProfileModal.style.display = 'none'; }, 200);
+    });
+    publicProfileModal.addEventListener('click', (e) => {
+        if (e.target === publicProfileModal) {
+            publicProfileModal.classList.remove('open');
+            setTimeout(() => { publicProfileModal.style.display = 'none'; }, 200);
+        }
+    });
 
     // === Delete ===
     async function deleteItem(id, element) {

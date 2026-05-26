@@ -1659,104 +1659,254 @@ main {
 }
 
 /* === Edit Item Modal === */
-#edit-item-modal .modal-content {
-    max-width: 500px;
+.edit-modal-content {
+    max-width: 480px;
+    padding: 0;
+    overflow: hidden;
 }
 
-#edit-item-form label {
+.edit-modal-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 20px 24px;
+    font-size: 1em;
+    font-weight: 700;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.02);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+#edit-item-form {
+    padding: 20px 24px 24px;
+}
+
+.edit-field {
+    margin-bottom: 14px;
+}
+
+.edit-field label {
     display: block;
     font-weight: 600;
-    margin-bottom: 4px;
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 0.88em;
-    margin-top: 12px;
+    margin-bottom: 5px;
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 0.82em;
 }
 
-#edit-item-form input[type="text"],
-#edit-item-form input[type="number"],
-#edit-item-form textarea,
-#edit-item-form select,
-#edit-item-form input[type="file"] {
+.edit-field input[type="text"],
+.edit-field input[type="number"],
+.edit-field textarea,
+.edit-field select {
     width: 100%;
-    padding: 11px 14px;
+    padding: 10px 13px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 10px;
-    font-size: 0.92em;
+    font-size: 0.9em;
     background: rgba(255, 255, 255, 0.06);
     color: #e0e0e0;
     font-family: inherit;
     outline: none;
+    transition: border-color 0.2s;
 }
 
-#edit-item-form input[type="text"]:focus,
-#edit-item-form input[type="number"]:focus,
-#edit-item-form textarea:focus,
-#edit-item-form select:focus {
+.edit-field input[type="text"]:focus,
+.edit-field input[type="number"]:focus,
+.edit-field textarea:focus,
+.edit-field select:focus {
     border-color: #77ff00;
 }
 
-#edit-item-form select option {
+.edit-field input::placeholder,
+.edit-field textarea::placeholder {
+    color: rgba(255, 255, 255, 0.25);
+}
+
+.edit-field select option {
     background: #1a1a2e;
     color: #e0e0e0;
 }
 
-.modal-form-actions {
+.edit-field-row {
+    display: flex;
+    gap: 12px;
+}
+
+.edit-file-wrap {
+    position: relative;
+}
+
+.edit-file-wrap input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.edit-file-label {
+    display: block;
+    padding: 10px 14px;
+    border: 1px dashed rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    font-size: 0.85em;
+    color: rgba(255, 255, 255, 0.4);
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.edit-file-wrap:hover .edit-file-label {
+    border-color: #77ff00;
+    background: rgba(119, 255, 0, 0.04);
+    color: #77ff00;
+}
+
+.edit-form-actions {
     display: flex;
     gap: 10px;
-    margin-top: 16px;
+    margin-top: 20px;
+}
+
+.btn-edit-save {
+    flex: 1;
+    padding: 11px;
+    background: #77ff00;
+    color: #0f0f1a;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 700;
+    font-family: inherit;
+    transition: background 0.2s;
+}
+
+.btn-edit-save:hover {
+    background: #66e000;
+}
+
+.btn-edit-cancel {
+    padding: 11px 24px;
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 600;
+    font-family: inherit;
+    transition: background 0.2s;
+}
+
+.btn-edit-cancel:hover {
+    background: rgba(255, 255, 255, 0.1);
 }
 
 /* === Public Profile Modal === */
-.public-profile-img {
-    width: 100px;
-    height: 100px;
+.pp-modal-content {
+    max-width: 480px;
+    padding: 0;
+    overflow: hidden;
+}
+
+#public-profile-body {
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.pp-header {
+    text-align: center;
+    padding: 32px 24px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.pp-avatar {
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
     object-fit: cover;
-    margin: 0 auto 12px;
-    border: 3px solid rgba(255, 255, 255, 0.06);
+    margin: 0 auto 14px;
+    border: 3px solid rgba(119, 255, 0, 0.15);
+    display: block;
 }
 
-.public-profile-body h2 {
+.pp-avatar-placeholder {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8em;
+    font-weight: 700;
+    color: #0f0f1a;
+}
+
+#public-profile-body h2 {
     color: #fff;
-    text-align: center;
+    margin: 0 0 6px;
+    font-size: 1.3em;
 }
 
-.public-profile-bio {
-    color: rgba(255, 255, 255, 0.6);
-    text-align: center;
-    margin-bottom: 8px;
-}
-
-.public-profile-meta {
-    color: rgba(255, 255, 255, 0.45);
+.pp-bio {
+    color: rgba(255, 255, 255, 0.55);
     font-size: 0.9em;
-    text-align: center;
-    margin-bottom: 16px;
+    margin: 0 0 8px;
+    line-height: 1.5;
 }
 
-.public-profile-items {
+.pp-meta {
+    color: rgba(255, 255, 255, 0.35);
+    font-size: 0.82em;
+    margin: 0;
+}
+
+.pp-section {
+    padding: 20px 24px 24px;
+}
+
+.pp-section-title {
+    font-size: 0.95em;
+    font-weight: 600;
+    color: #fff;
+    margin: 0 0 12px;
+}
+
+.pp-items {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     gap: 10px;
 }
 
-.public-profile-item {
-    background: rgba(255, 255, 255, 0.04);
-    padding: 8px;
-    border-radius: 10px;
+.pp-item {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 10px;
+    border-radius: 12px;
     text-align: center;
     border: 1px solid rgba(255, 255, 255, 0.04);
 }
 
-.public-profile-item img {
-    max-height: 80px;
+.pp-item img {
+    max-height: 70px;
     border-radius: 6px;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
+    max-width: 100%;
 }
 
-.public-profile-item span {
+.pp-item-name {
+    display: block;
     color: rgba(255, 255, 255, 0.8);
-    font-size: 0.85em;
+    font-size: 0.82em;
+    font-weight: 500;
+}
+
+.pp-item .item-precio {
+    font-size: 0.78em;
+    margin-top: 2px;
+}
+
+.pp-empty {
+    color: rgba(255, 255, 255, 0.35);
+    text-align: center;
+    padding: 20px;
+    font-size: 0.9em;
 }
 
 /* === Info Cards (Sobre Nosotros / Reglas) === */

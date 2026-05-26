@@ -286,30 +286,49 @@ $isAdmin = is_admin();
 
         <!-- ============ EDIT ITEM MODAL ============ -->
         <div id="edit-item-modal" class="modal-overlay" style="display:none;">
-            <div class="modal-content">
-                <button id="edit-item-close" class="modal-close">&times;</button>
-                <h2>Editar Item</h2>
+            <div class="modal-content edit-modal-content">
+                <button id="edit-item-close" class="modal-close">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+                <div class="edit-modal-header">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#77ff00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    Editar Item
+                </div>
                 <form id="edit-item-form">
                     <input type="hidden" id="edit-item-id">
 
-                    <label for="edit-item-nombre">Nombre:</label>
-                    <input type="text" id="edit-item-nombre" required>
+                    <div class="edit-field">
+                        <label for="edit-item-nombre">Nombre</label>
+                        <input type="text" id="edit-item-nombre" placeholder="Nombre del item" required>
+                    </div>
 
-                    <label for="edit-item-descripcion">Descripcion:</label>
-                    <textarea id="edit-item-descripcion" rows="3"></textarea>
+                    <div class="edit-field">
+                        <label for="edit-item-descripcion">Descripcion</label>
+                        <textarea id="edit-item-descripcion" rows="3" placeholder="Describe el estado, detalles..."></textarea>
+                    </div>
 
-                    <label for="edit-item-precio">Precio (opcional):</label>
-                    <input type="number" id="edit-item-precio" step="0.01" min="0">
+                    <div class="edit-field-row">
+                        <div class="edit-field" style="flex:1">
+                            <label for="edit-item-precio">Precio</label>
+                            <input type="number" id="edit-item-precio" step="0.01" min="0" placeholder="0.00">
+                        </div>
+                        <div class="edit-field" style="flex:1">
+                            <label for="edit-item-categoria">Categoria</label>
+                            <select id="edit-item-categoria" required></select>
+                        </div>
+                    </div>
 
-                    <label for="edit-item-categoria">Categoria:</label>
-                    <select id="edit-item-categoria" required></select>
+                    <div class="edit-field">
+                        <label for="edit-item-imagen">Nueva imagen (opcional)</label>
+                        <div class="edit-file-wrap">
+                            <input type="file" id="edit-item-imagen" accept="image/*">
+                            <span class="edit-file-label">Seleccionar archivo</span>
+                        </div>
+                    </div>
 
-                    <label for="edit-item-imagen">Nueva imagen (opcional):</label>
-                    <input type="file" id="edit-item-imagen" accept="image/*">
-
-                    <div class="modal-form-actions">
-                        <button type="submit" class="btn-foro-submit">Guardar cambios</button>
-                        <button type="button" id="edit-item-cancel" class="btn-foro-cancel">Cancelar</button>
+                    <div class="edit-form-actions">
+                        <button type="submit" class="btn-edit-save">Guardar cambios</button>
+                        <button type="button" id="edit-item-cancel" class="btn-edit-cancel">Cancelar</button>
                     </div>
                 </form>
             </div>
@@ -317,8 +336,10 @@ $isAdmin = is_admin();
 
         <!-- ============ PUBLIC PROFILE MODAL ============ -->
         <div id="public-profile-modal" class="modal-overlay" style="display:none;">
-            <div class="modal-content">
-                <button id="public-profile-close" class="modal-close">&times;</button>
+            <div class="modal-content pp-modal-content">
+                <button id="public-profile-close" class="modal-close">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
                 <div id="public-profile-body"></div>
             </div>
         </div>
