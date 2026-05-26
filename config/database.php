@@ -53,6 +53,22 @@ class PDOCompatible {
     public function lastInsertId(): int {
         return $this->mysqli->insert_id;
     }
+
+    public function beginTransaction(): bool {
+        return $this->mysqli->autocommit(false);
+    }
+
+    public function commit(): bool {
+        $ok = $this->mysqli->commit();
+        $this->mysqli->autocommit(true);
+        return $ok;
+    }
+
+    public function rollBack(): bool {
+        $ok = $this->mysqli->rollback();
+        $this->mysqli->autocommit(true);
+        return $ok;
+    }
 }
 
 class PDOStmtCompatible {
