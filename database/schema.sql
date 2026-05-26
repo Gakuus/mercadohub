@@ -80,6 +80,28 @@ CREATE TABLE IF NOT EXISTS item_comentarios (
   FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Trades (intercambios)
+CREATE TABLE IF NOT EXISTS intercambios (
+  id_intercambio INT AUTO_INCREMENT PRIMARY KEY,
+  id_solicitante INT NOT NULL,
+  id_receptor INT NOT NULL,
+  estado VARCHAR(20) NOT NULL DEFAULT 'pendiente',
+  mensaje TEXT DEFAULT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (id_solicitante) REFERENCES usuario(id_usuario) ON DELETE CASCADE,
+  FOREIGN KEY (id_receptor) REFERENCES usuario(id_usuario) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS intercambio_items (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  id_intercambio INT NOT NULL,
+  id_items INT NOT NULL,
+  lado VARCHAR(20) NOT NULL COMMENT 'ofrece o recibe',
+  FOREIGN KEY (id_intercambio) REFERENCES intercambios(id_intercambio) ON DELETE CASCADE,
+  FOREIGN KEY (id_items) REFERENCES items(id_items) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- Item images gallery
 CREATE TABLE IF NOT EXISTS item_imagenes (
   id INT AUTO_INCREMENT PRIMARY KEY,

@@ -40,6 +40,7 @@ $isAdmin = is_admin();
                     <a class="nav-link" href="#" data-section="reglas">Reglas</a>
                     <a class="nav-link" href="#" data-section="foro">Foro</a>
                     <a class="nav-link" href="#" data-section="perfil">Perfil</a>
+                    <a class="nav-link" href="#" data-section="intercambios">Intercambios</a>
                     <?php if ($isAdmin): ?>
                     <a class="nav-link" href="#" data-section="admin">Admin</a>
                     <?php endif; ?>
@@ -473,6 +474,62 @@ $isAdmin = is_admin();
                 <div id="profile-items-list"></div>
             </div>
         </section>
+
+        <!-- ============ INTERCAMBIOS ============ -->
+        <section id="intercambios" class="section">
+            <div class="trades-header">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#77ff00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+                <h1>Mis Intercambios</h1>
+            </div>
+            <div class="trade-filters">
+                <button class="trade-filter active" data-filter="all">Todos</button>
+                <button class="trade-filter" data-filter="pendiente">Pendientes</button>
+                <button class="trade-filter" data-filter="aceptado">Aceptados</button>
+                <button class="trade-filter" data-filter="rechazado">Rechazados</button>
+            </div>
+            <div id="trades-loader" class="loader"><div class="spinner"></div></div>
+            <div id="trades-empty" class="trades-empty-state">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+                <p>No tienes intercambios aun.</p>
+            </div>
+            <div id="trades-list"></div>
+        </section>
+
+        <!-- ============ TRADE MODAL ============ -->
+        <div id="trade-modal" class="modal-overlay" style="display:none;">
+            <div class="modal-content trade-modal-content">
+                <button id="trade-modal-close" class="modal-close">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+                <div class="trade-modal-header">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#77ff00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+                    Nuevo Intercambio
+                </div>
+                <div class="trade-modal-body">
+                    <div class="trade-section">
+                        <h3 class="trade-section-title">Items que solicito</h3>
+                        <div id="trade-items-solicitados" class="trade-items-mini"></div>
+                    </div>
+                    <div class="trade-section">
+                        <h3 class="trade-section-title">Tus items para ofrecer</h3>
+                        <div id="trade-my-items" class="trade-items-grid"></div>
+                        <p id="trade-my-empty" class="trade-empty-msg" style="display:none">No tienes items para ofrecer. <a href="#" data-section="intercambio">Agrega uno</a>.</p>
+                    </div>
+                    <div class="trade-section">
+                        <label for="trade-mensaje">Mensaje (opcional)</label>
+                        <textarea id="trade-mensaje" rows="2" placeholder="Escribe un mensaje para el usuario..."></textarea>
+                    </div>
+                    <p id="trade-error" class="trade-error-msg" style="display:none"></p>
+                </div>
+                <div class="trade-modal-footer">
+                    <button id="btn-send-trade" class="btn-trade-send">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                        Enviar propuesta
+                    </button>
+                    <button id="trade-modal-cancel" class="btn-trade-cancel">Cancelar</button>
+                </div>
+            </div>
+        </div>
     </main>
 
     <script>

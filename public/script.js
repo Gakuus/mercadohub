@@ -39,6 +39,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentCategoria = 'all';
     let currentPostId = null;
     let currentModalItemId = null;
+    let tradeTargetUserId = null;
+    let tradeTargetItemId = null;
+    let tradeSelectedItems = [];
 
     // === Toast ===
     function showToast(message, type = 'info') {
@@ -349,6 +352,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span class="detail-user">${userLink}</span>
                 </div>
                 ${descHtml}
+                ${!itemData.esPropio ? `<button class="btn-trade" data-id="${itemData.id}" data-userid="${itemData.id_usuario}">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+                    Intercambiar
+                </button>` : ''}
             `;
 
             const userLinkEl = infoContainer.querySelector('.detail-user-link');
@@ -358,6 +365,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     itemModal.style.display = 'none';
                     itemModal.classList.remove('open');
                     openPublicProfile(userLinkEl.dataset.userid);
+                });
+            }
+
+            const tradeBtn = infoContainer.querySelector('.btn-trade');
+            if (tradeBtn) {
+                tradeBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    closeItemModal();
+                    currentModalItemId = null;
+                    openTradeModal(tradeBtn.dataset.userid, tradeBtn.dataset.id);
                 });
             }
 
@@ -1141,6 +1158,229 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (err) { showToast('Error: ' + err.message, 'error'); }
     });
 
+    // === TRADES ===
+    let currentTradeFilter = 'all';
+
+    async function loadTrades() {
+        const list = document.getElementById('trades-list');
+        const loader = document.getElementById('trades-loader');
+        const empty = document.getElementById('trades-empty');
+        if (!list) return;
+        loader.classList.add('active');
+        try {
+            const data = await fetchJSON(`${BASE_URL}/api/trade/getUserTrades.php?filter=${currentTradeFilter}`);
+            if (data.error) throw new Error(data.error);
+            list.innerHTML = '';
+            if (data.length === 0) { empty.classList.add('active'); return; }
+            empty.classList.remove('active');
+
+            data.forEach(t => {
+                const div = document.createElement('div');
+                div.className = 'trade-card';
+                const isSender = t.soy_solicitante;
+                const otherName = isSender ? t.receptor_nombre : t.solicitante_nombre;
+                const otherId = isSender ? t.receptor_id : t.solicitante_id;
+                const fecha = new Date(t.created_at).toLocaleDateString('es-AR', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+                // Items HTML
+                let ofreceHtml = '';
+                t.items_ofrecidos.forEach(it => {
+                    const img = it.img ? `<img src="${it.img}" alt="">` : '';
+                    ofreceHtml += `<div class="trade-item-mini">${img}<span>${it.nombre}</span></div>`;
+                });
+                let recibeHtml = '';
+                t.items_solicitados.forEach(it => {
+                    const img = it.img ? `<img src="${it.img}" alt="">` : '';
+                    recibeHtml += `<div class="trade-item-mini">${img}<span>${it.nombre}</span></div>`;
+                });
+
+                const isPending = t.estado === 'pendiente';
+                const canRespond = !isSender && isPending;
+
+                let actionsHtml = '';
+                if (canRespond) {
+                    actionsHtml = `
+                        <div class="trade-card-actions">
+                            <button class="btn-trade-accept" data-tradeid="${t.id_intercambio}">Aceptar</button>
+                            <button class="btn-trade-reject" data-tradeid="${t.id_intercambio}">Rechazar</button>
+                        </div>`;
+                }
+
+                const mensajeHtml = t.mensaje ? `<div class="trade-card-message">"${t.mensaje}"</div>` : '';
+
+                div.innerHTML = `
+                    <div class="trade-card-header">
+                        <div class="trade-card-users">
+                            ${isSender ? 'Tu' : `<strong>${otherName}</strong>`}
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+                            ${isSender ? `<strong>${otherName}</strong>` : 'Tu'}
+                            <span class="trade-card-date">${fecha}</span>
+                        </div>
+                        <span class="trade-status-badge trade-status-${t.estado}">${t.estado}</span>
+                    </div>
+                    <div class="trade-card-items">
+                        <div class="trade-item-col">
+                            <span class="trade-item-col-label">${isSender ? 'Ofreces' : 'Recibes'}</span>
+                            ${ofreceHtml}
+                        </div>
+                        <div class="trade-card-arrow">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                        </div>
+                        <div class="trade-item-col">
+                            <span class="trade-item-col-label">${isSender ? 'Recibes' : 'Ofreces'}</span>
+                            ${recibeHtml}
+                        </div>
+                    </div>
+                    ${mensajeHtml}
+                    ${actionsHtml}
+                `;
+                list.appendChild(div);
+
+                const acceptBtn = div.querySelector('.btn-trade-accept');
+                if (acceptBtn) {
+                    acceptBtn.addEventListener('click', () => respondTrade(t.id_intercambio, 'aceptar'));
+                }
+                const rejectBtn = div.querySelector('.btn-trade-reject');
+                if (rejectBtn) {
+                    rejectBtn.addEventListener('click', () => respondTrade(t.id_intercambio, 'rechazar'));
+                }
+            });
+        } catch (err) { showToast('Error al cargar intercambios: ' + err.message, 'error'); }
+        finally { loader.classList.remove('active'); }
+    }
+
+    async function respondTrade(tradeId, accion) {
+        if (!confirm(accion === 'aceptar' ? 'Aceptar este intercambio?' : 'Rechazar este intercambio?')) return;
+        try {
+            const data = await apiFetch(`${BASE_URL}/api/trade/respondTrade.php`, {
+                method: 'POST', body: JSON.stringify({ id_intercambio: tradeId, accion }),
+            });
+            if (data.error) throw new Error(data.error);
+            showToast(data.message, 'success');
+            loadTrades();
+        } catch (err) { showToast('Error: ' + err.message, 'error'); }
+    }
+
+    // Trade modal
+    async function openTradeModal(userId, itemId) {
+        tradeTargetUserId = userId;
+        tradeTargetItemId = itemId;
+        tradeSelectedItems = [];
+        document.getElementById('trade-mensaje').value = '';
+        document.getElementById('trade-error').style.display = 'none';
+
+        const solicContainer = document.getElementById('trade-items-solicitados');
+        const myContainer = document.getElementById('trade-my-items');
+        const myEmpty = document.getElementById('trade-my-empty');
+
+        // Show the target item(s) being requested
+        const itemData = allItems.find(i => i.id == itemId);
+        if (itemData) {
+            solicContainer.innerHTML = `
+                <div class="trade-item-mini">
+                    ${itemData.img ? `<img src="${itemData.img}" alt="">` : ''}
+                    <span>${itemData.nombre}</span>
+                </div>`;
+        }
+
+        // Load user's items
+        myContainer.innerHTML = '<div class="spinner" style="margin:20px auto"></div>';
+        try {
+            const data = await fetchJSON(`${BASE_URL}/api/getMyItems.php`);
+            if (data.error) throw new Error(data.error);
+            myContainer.innerHTML = '';
+            if (data.length === 0) {
+                myEmpty.style.display = '';
+                myContainer.innerHTML = '';
+            } else {
+                myEmpty.style.display = 'none';
+                data.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'trade-item-select';
+                    if (item.id == itemId) div.style.display = 'none'; // can't offer the item being requested
+                    const img = item.img ? `<img src="${item.img}" alt="">` : '';
+                    div.innerHTML = `
+                        ${img}
+                        <div class="trade-select-check">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="#0f0f1a" stroke="none"><path d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"/></svg>
+                        </div>
+                        <div class="trade-item-name-overlay">${item.nombre}</div>
+                    `;
+                    div.dataset.id = item.id;
+                    div.addEventListener('click', () => {
+                        div.classList.toggle('selected');
+                        const idx = tradeSelectedItems.indexOf(item.id);
+                        if (idx > -1) tradeSelectedItems.splice(idx, 1);
+                        else tradeSelectedItems.push(item.id);
+                        document.getElementById('btn-send-trade').disabled = tradeSelectedItems.length === 0;
+                    });
+                    myContainer.appendChild(div);
+                });
+            }
+        } catch (err) {
+            myContainer.innerHTML = '<p class="error-msg">Error al cargar tus items.</p>';
+        }
+
+        document.getElementById('trade-modal').style.display = 'flex';
+        requestAnimationFrame(() => document.getElementById('trade-modal').classList.add('open'));
+    }
+
+    function closeTradeModal() {
+        const modal = document.getElementById('trade-modal');
+        modal.classList.remove('open');
+        setTimeout(() => { modal.style.display = 'none'; }, 200);
+    }
+
+    document.getElementById('btn-send-trade').addEventListener('click', async () => {
+        const btn = document.getElementById('btn-send-trade');
+        const errorEl = document.getElementById('trade-error');
+        errorEl.style.display = 'none';
+        if (tradeSelectedItems.length === 0) {
+            errorEl.textContent = 'Selecciona al menos un item para ofrecer.';
+            errorEl.style.display = 'block';
+            return;
+        }
+        btn.disabled = true;
+        btn.textContent = 'Enviando...';
+        try {
+            const data = await apiFetch(`${BASE_URL}/api/trade/createTrade.php`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    id_receptor: tradeTargetUserId,
+                    items_ofrecidos: tradeSelectedItems,
+                    items_solicitados: [parseInt(tradeTargetItemId)],
+                    mensaje: document.getElementById('trade-mensaje').value.trim(),
+                }),
+            });
+            if (data.error) throw new Error(data.error);
+            showToast('Propuesta enviada exitosamente', 'success');
+            closeTradeModal();
+            loadTrades();
+        } catch (err) {
+            errorEl.textContent = err.message;
+            errorEl.style.display = 'block';
+        } finally {
+            btn.disabled = false;
+            btn.textContent = 'Enviar propuesta';
+        }
+    });
+
+    document.getElementById('trade-modal-close').addEventListener('click', closeTradeModal);
+    document.getElementById('trade-modal-cancel').addEventListener('click', closeTradeModal);
+    document.getElementById('trade-modal').addEventListener('click', (e) => {
+        if (e.target === document.getElementById('trade-modal')) closeTradeModal();
+    });
+
+    // Trade filters
+    document.querySelectorAll('.trade-filter').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.trade-filter').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentTradeFilter = btn.dataset.filter;
+            loadTrades();
+        });
+    });
+
     // Mobile nav toggle
     if (navToggle) {
         navToggle.addEventListener('click', () => {
@@ -1157,6 +1397,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (sectionId === 'perfil') { loadProfile(); loadProfileItems(); }
         if (sectionId === 'foro') { showForoListView(); loadForoPosts(); }
         if (sectionId === 'admin') { loadAdminUsers(); loadAdminCategorias(); }
+        if (sectionId === 'intercambios') { loadTrades(); }
         // Close mobile menu
         if (navToggle) navToggle.classList.remove('open');
         if (navMenu) navMenu.classList.remove('open');
