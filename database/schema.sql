@@ -80,6 +80,16 @@ CREATE TABLE IF NOT EXISTS item_comentarios (
   FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Item images gallery
+CREATE TABLE IF NOT EXISTS item_imagenes (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  id_items INT NOT NULL,
+  path VARCHAR(255) NOT NULL,
+  orden INT NOT NULL DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (id_items) REFERENCES items(id_items) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- Activity log
 CREATE TABLE IF NOT EXISTS actividad_log (
   id_log INT AUTO_INCREMENT PRIMARY KEY,

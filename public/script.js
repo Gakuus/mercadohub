@@ -280,8 +280,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const commentsList = document.getElementById('item-comments-list');
         const relatedGrid = document.getElementById('related-items-grid');
         const divider = document.getElementById('item-modal-divider');
+        const galleryMain = document.getElementById('item-gallery-main');
+        const mainImg = document.getElementById('item-gallery-main-img');
+        const thumbsContainer = document.getElementById('item-gallery-thumbs');
 
-        imgContainer.innerHTML = '<div class="spinner"></div>';
         infoContainer.innerHTML = '';
         commentsList.innerHTML = '';
         relatedGrid.innerHTML = '';
@@ -293,11 +295,37 @@ document.addEventListener('DOMContentLoaded', () => {
             const itemData = allItems.find(i => i.id == id);
             if (!itemData) throw new Error('Item no encontrado');
 
-            const imgHtml = itemData.img
-                ? `<img src="${itemData.img}" alt="${itemData.nombre}" class="detail-img" loading="lazy">`
-                : `<div class="detail-img-placeholder">
-                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-                   </div>`;
+            // Load gallery images
+            const galleryData = await fetchJSON(`${BASE_URL}/api/getItemImages.php?id=${id}`);
+            let images = [];
+            if (!galleryData.error && galleryData.length > 0) {
+                images = galleryData;
+            } else if (itemData.img) {
+                images = [{ id: 0, url: itemData.img, orden: 0 }];
+            }
+
+            // Gallery
+            if (images.length > 0) {
+                mainImg.src = images[0].url;
+                galleryMain.style.display = '';
+                thumbsContainer.innerHTML = '';
+                images.forEach((img, idx) => {
+                    const thumb = document.createElement('img');
+                    thumb.className = 'item-gallery-thumb' + (idx === 0 ? ' active' : '');
+                    thumb.src = img.url;
+                    thumb.addEventListener('click', () => {
+                        mainImg.src = img.url;
+                        thumbsContainer.querySelectorAll('.item-gallery-thumb').forEach(t => t.classList.remove('active'));
+                        thumb.classList.add('active');
+                    });
+                    thumbsContainer.appendChild(thumb);
+                });
+            } else {
+                mainImg.src = '';
+                galleryMain.style.display = 'none';
+                thumbsContainer.innerHTML = '';
+            }
+
             const precioHtml = itemData.precio
                 ? `<div class="detail-precio-tag">$${parseFloat(itemData.precio).toFixed(2)}</div>`
                 : '';
@@ -311,7 +339,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     ${itemData.usuario}
                    </a>`;
 
-            imgContainer.innerHTML = imgHtml;
             infoContainer.innerHTML = `
                 <div class="detail-header">
                     <h2 class="detail-title">${itemData.nombre}</h2>
@@ -461,8 +488,101 @@ document.addEventListener('DOMContentLoaded', () => {
                 editCatSelect.appendChild(clone);
             }
         });
+
+        // Load images
+        loadEditImages(id);
+
         editItemModal.style.display = 'flex';
         requestAnimationFrame(() => editItemModal.classList.add('open'));
+    }
+
+    async function loadEditImages(itemId) {
+        const grid = document.getElementById('edit-images-grid');
+        grid.innerHTML = '<div class="spinner" style="margin:8px auto"></div>';
+        try {
+            const data = await fetchJSON(`${BASE_URL}/api/getItemImages.php?id=${itemId}`);
+            grid.innerHTML = '';
+            if (data.error || data.length === 0) {
+                grid.innerHTML = '<p style="color:rgba(255,255,255,0.4);font-size:0.85em">Sin imagenes.</p>';
+                return;
+            }
+            data.forEach(img => {
+                const div = document.createElement('div');
+                div.className = 'edit-image-item';
+                const isCover = img.orden === 0;
+                div.innerHTML = `
+                    <img src="${img.url}" alt="" loading="lazy">
+                    <div class="edit-img-actions">
+                        ${isCover
+                            ? '<span style="color:#77ff00;font-size:0.7em;font-weight:600">PORTADA</span>'
+                            : `<button class="btn-set-cover" data-imgid="${img.id}" title="Portada">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                               </button>
+                               <button class="btn-del-img" data-imgid="${img.id}" title="Eliminar">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                               </button>`
+                        }
+                    </div>
+                `;
+                grid.appendChild(div);
+
+                const setCoverBtn = div.querySelector('.btn-set-cover');
+                if (setCoverBtn) {
+                    setCoverBtn.addEventListener('click', async (e) => {
+                        e.stopPropagation();
+                        try {
+                            const res = await apiFetch(`${BASE_URL}/api/setItemCoverImage.php`, {
+                                method: 'POST', body: JSON.stringify({ id: parseInt(setCoverBtn.dataset.imgid) }),
+                            });
+                            if (res.error) throw new Error(res.error);
+                            showToast('Portada actualizada', 'success');
+                            loadEditImages(itemId);
+                        } catch (err) { showToast('Error: ' + err.message, 'error'); }
+                    });
+                }
+
+                const delBtn = div.querySelector('.btn-del-img');
+                if (delBtn) {
+                    delBtn.addEventListener('click', async (e) => {
+                        e.stopPropagation();
+                        if (!confirm('Eliminar esta imagen?')) return;
+                        try {
+                            const res = await apiFetch(`${BASE_URL}/api/deleteItemImage.php`, {
+                                method: 'POST', body: JSON.stringify({ id: parseInt(delBtn.dataset.imgid) }),
+                            });
+                            if (res.error) throw new Error(res.error);
+                            showToast('Imagen eliminada', 'success');
+                            loadEditImages(itemId);
+                        } catch (err) { showToast('Error: ' + err.message, 'error'); }
+                    });
+                }
+            });
+        } catch (err) {
+            grid.innerHTML = '<p class="error-msg">Error al cargar imagenes.</p>';
+        }
+    }
+
+    // Upload extra images in edit modal
+    const editExtraInput = document.getElementById('edit-item-imagenes-extra');
+    if (editExtraInput) {
+        editExtraInput.addEventListener('change', async () => {
+            const itemId = document.getElementById('edit-item-id').value;
+            if (!itemId || editExtraInput.files.length === 0) return;
+            const formData = new FormData();
+            formData.append('id_items', itemId);
+            formData.append('csrf_token', CSRF_TOKEN);
+            for (let i = 0; i < editExtraInput.files.length; i++) {
+                formData.append('imagenes[]', editExtraInput.files[i]);
+            }
+            try {
+                const res = await fetch(`${BASE_URL}/api/addItemImages.php`, { method: 'POST', body: formData });
+                const data = await res.json();
+                if (data.error) throw new Error(data.error);
+                showToast(data.message, 'success');
+                editExtraInput.value = '';
+                loadEditImages(itemId);
+            } catch (err) { showToast('Error: ' + err.message, 'error'); }
+        });
     }
 
     editItemForm.addEventListener('submit', async (e) => {
@@ -662,24 +782,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
         submitBtn.disabled = true;
         submitBtn.textContent = 'Agregando...';
-        const reader = new FileReader();
-        reader.onload = async (ev) => {
-            try {
-                const data = await apiFetch(`${BASE_URL}/api/addItem.php`, {
-                    method: 'POST',
-                    body: JSON.stringify({ nombre, descripcion, precio: precio || null, url: ev.target.result, categoria }),
-                });
-                if (data.error) throw new Error(data.error);
-                showToast('Item agregado exitosamente', 'success');
-                intercambioForm.reset();
-                imagePreview.classList.remove('visible');
-                imagePreview.src = '';
-                if (dropzone) dropzone.classList.remove('has-image');
-                loadItems(true);
-            } catch (err) { showToast('Error: ' + err.message, 'error'); }
-            finally { submitBtn.disabled = false; submitBtn.textContent = 'Agregar Item'; }
-        };
-        reader.readAsDataURL(imagen);
+
+        try {
+            const formData = new FormData();
+            formData.append('nombre', nombre);
+            formData.append('descripcion', descripcion);
+            if (precio) formData.append('precio', precio);
+            formData.append('categoria', categoria);
+            formData.append('csrf_token', CSRF_TOKEN);
+            formData.append('imagen', imagen);
+
+            const extraFiles = document.getElementById('item-imagenes-extra').files;
+            for (let i = 0; i < extraFiles.length; i++) {
+                formData.append('imagenes_extra[]', extraFiles[i]);
+            }
+
+            const res = await fetch(`${BASE_URL}/api/addItem.php`, { method: 'POST', body: formData });
+            const data = await res.json();
+            if (data.error) throw new Error(data.error);
+            showToast('Item agregado exitosamente', 'success');
+            intercambioForm.reset();
+            imagePreview.classList.remove('visible');
+            imagePreview.src = '';
+            if (dropzone) dropzone.classList.remove('has-image');
+            document.getElementById('extra-previews').innerHTML = '';
+            loadItems(true);
+        } catch (err) { showToast('Error: ' + err.message, 'error'); }
+        finally { submitBtn.disabled = false; submitBtn.textContent = 'Publicar Item'; }
     });
 
     // Drag & drop
@@ -716,6 +845,25 @@ document.addEventListener('DOMContentLoaded', () => {
             dropzone.classList.remove('has-image');
         }
     });
+
+    // Extra images preview
+    const extraInput = document.getElementById('item-imagenes-extra');
+    const extraPreviews = document.getElementById('extra-previews');
+    if (extraInput) {
+        extraInput.addEventListener('change', () => {
+            extraPreviews.innerHTML = '';
+            Array.from(extraInput.files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = document.createElement('img');
+                    img.className = 'extra-preview-thumb';
+                    img.src = e.target.result;
+                    extraPreviews.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+    }
 
     categoriaFilter.addEventListener('change', (e) => {
         currentCategoria = e.target.value;

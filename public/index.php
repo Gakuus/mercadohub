@@ -211,35 +211,67 @@ $isAdmin = is_admin();
 
         <!-- ============ AGREGAR ITEM ============ -->
         <section id="intercambio" class="section">
-            <h1>Agregar Item</h1>
-            <form id="intercambio-form">
-                <label for="item-nombre">Nombre del Item:</label>
-                <input type="text" id="item-nombre" name="item-nombre" required>
-
-                <label for="item-descripcion">Descripcion:</label>
-                <textarea id="item-descripcion" rows="3" placeholder="Describe el estado, detalles, etc."></textarea>
-
-                <label for="item-precio">Precio (opcional):</label>
-                <input type="number" id="item-precio" step="0.01" min="0" placeholder="0.00">
-
-                <label for="item-imagen">Imagen del Item</label>
-                <div class="dropzone" id="dropzone">
-                    <input type="file" id="item-imagen" name="item-imagen" accept="image/*" required>
-                    <div class="dropzone-content">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                        <p>Arrastra una imagen aqui o <span>selecciona</span></p>
-                        <span class="dropzone-hint">JPG, PNG, WEBP — Max 5MB</span>
-                    </div>
-                    <img id="image-preview" alt="Vista previa">
+            <div class="add-item-card">
+                <div class="add-item-header">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#77ff00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                    <span>Agregar Item</span>
                 </div>
+                <form id="intercambio-form" enctype="multipart/form-data">
+                    <div class="add-item-body">
+                        <div class="add-item-main">
+                            <div class="add-field">
+                                <label for="item-nombre">Nombre del Item</label>
+                                <input type="text" id="item-nombre" placeholder="Ej: Playstation 4, Bicicleta, Libro..." required>
+                            </div>
 
-                <label for="item-categoria">Categoria:</label>
-                <select id="item-categoria" name="item-categoria" required>
-                    <option value="" disabled selected>Cargando...</option>
-                </select>
+                            <div class="add-field">
+                                <label for="item-descripcion">Descripcion</label>
+                                <textarea id="item-descripcion" rows="3" placeholder="Describe el estado, detalles, etc."></textarea>
+                            </div>
 
-                <button type="submit" id="btn-submit-item">Agregar Item</button>
-            </form>
+                            <div class="add-field-row">
+                                <div class="add-field" style="flex:1">
+                                    <label for="item-precio">Precio</label>
+                                    <input type="number" id="item-precio" step="0.01" min="0" placeholder="0.00">
+                                </div>
+                                <div class="add-field" style="flex:1">
+                                    <label for="item-categoria">Categoria</label>
+                                    <select id="item-categoria" required>
+                                        <option value="" disabled selected>Cargando...</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="add-item-image">
+                            <div class="dropzone" id="dropzone">
+                                <input type="file" id="item-imagen" name="imagen" accept="image/*" required>
+                                <div class="dropzone-content">
+                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                                    <p>Arrastra o <span>selecciona</span></p>
+                                    <span class="dropzone-hint">JPG, PNG, WEBP - Max 5MB</span>
+                                </div>
+                                <img id="image-preview" alt="Vista previa">
+                            </div>
+                            <div class="add-extra-images" id="add-extra-images">
+                                <label class="extra-images-label">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                    Agregar mas fotos
+                                    <input type="file" id="item-imagenes-extra" name="imagenes_extra[]" accept="image/*" multiple>
+                                </label>
+                                <div class="extra-previews" id="extra-previews"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="add-item-footer">
+                        <button type="submit" id="btn-submit-item">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            Publicar Item
+                        </button>
+                    </div>
+                </form>
+            </div>
         </section>
 
         <!-- ============ ITEMS ============ -->
@@ -267,7 +299,12 @@ $isAdmin = is_admin();
                 <div class="modal-scroll">
                     <div id="item-modal-layout">
                         <div id="item-modal-left">
-                            <div id="item-modal-image"></div>
+                            <div id="item-modal-image">
+                                <div class="item-gallery-main" id="item-gallery-main">
+                                    <img id="item-gallery-main-img" src="" alt="">
+                                </div>
+                                <div class="item-gallery-thumbs" id="item-gallery-thumbs"></div>
+                            </div>
                         </div>
                         <div id="item-modal-right">
                             <div id="item-modal-info"></div>
@@ -326,11 +363,24 @@ $isAdmin = is_admin();
                     </div>
 
                     <div class="edit-field">
+                        <label>Imagenes</label>
+                        <div class="edit-images-grid" id="edit-images-grid"></div>
+                    </div>
+
+                    <div class="edit-field">
                         <label for="edit-item-imagen">Nueva imagen (opcional)</label>
                         <div class="edit-file-wrap">
                             <input type="file" id="edit-item-imagen" accept="image/*">
                             <span class="edit-file-label">Seleccionar archivo</span>
                         </div>
+                    </div>
+
+                    <div class="edit-add-images">
+                        <label class="extra-images-label">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            Agregar mas fotos
+                            <input type="file" id="edit-item-imagenes-extra" accept="image/*" multiple>
+                        </label>
                     </div>
 
                     <div class="edit-form-actions">
