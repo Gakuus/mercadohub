@@ -246,6 +246,7 @@ $isAdmin = is_admin();
 
             <div id="items-loader" class="loader"><div class="spinner"></div></div>
             <div id="items-empty" class="loader">No hay items disponibles.</div>
+            <div id="items-skeleton" class="pinterest-grid skeleton-grid"></div>
             <div id="items-disponibles-lista" class="pinterest-grid"></div>
             <div id="scroll-sentinel" class="scroll-sentinel"><div class="spinner"></div></div>
         </section>

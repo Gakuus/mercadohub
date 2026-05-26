@@ -240,6 +240,58 @@ main {
     to { transform: rotate(360deg); }
 }
 
+/* === Skeleton Cards === */
+.skeleton-grid {
+    display: none;
+    column-count: 4;
+    column-gap: 16px;
+}
+
+.skeleton-grid.active {
+    display: block;
+}
+
+.skeleton-card {
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 16px;
+    background: #1a1a2e;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    break-inside: avoid;
+}
+
+.skeleton-img {
+    width: 100%;
+    padding-top: 75%;
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.skeleton-body {
+    padding: 14px;
+}
+
+.skeleton-line {
+    height: 12px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.06);
+    margin-bottom: 8px;
+}
+
+.skeleton-line:last-child {
+    margin-bottom: 0;
+}
+
+.skeleton-pulse {
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.7; }
+}
+
 /* === Items Grid (Pinterest-style) === */
 .pinterest-grid {
     column-count: 4;
@@ -2172,6 +2224,7 @@ main {
 
     main { padding: 80px 16px 30px; }
     .pinterest-grid { column-count: 1; }
+    .skeleton-grid { column-count: 2; }
     .item-detail-modal { border-radius: 16px; }
     #item-modal-layout { flex-direction: column; }
     #item-modal-left { padding: 12px; }

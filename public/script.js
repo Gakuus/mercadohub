@@ -50,6 +50,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function setLoading(show) {
+        const skeleton = document.getElementById('items-skeleton');
+        if (show && skeleton) {
+            skeleton.innerHTML = '';
+            for (let i = 0; i < 8; i++) {
+                const div = document.createElement('div');
+                div.className = 'skeleton-card';
+                div.innerHTML = `
+                    <div class="skeleton-img skeleton-pulse"></div>
+                    <div class="skeleton-body">
+                        <div class="skeleton-line skeleton-pulse" style="width:80%"></div>
+                        <div class="skeleton-line skeleton-pulse" style="width:40%"></div>
+                        <div class="skeleton-line skeleton-pulse" style="width:55%"></div>
+                    </div>`;
+                skeleton.appendChild(div);
+            }
+            skeleton.classList.add('active');
+        } else if (skeleton) {
+            skeleton.classList.remove('active');
+        }
         itemsLoader.classList.toggle('active', show);
     }
 
