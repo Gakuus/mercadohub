@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const fetchJSON = (url) => fetch(url).then(res => res.json());
 
-    const showSection = (sectionId) => {
+    let showSection = (sectionId) => {
         sections.forEach(s => s.style.display = s.id === sectionId ? 'block' : 'none');
         navLinks.forEach(l => l.classList.toggle('active', l.getAttribute('data-section') === sectionId));
     };
@@ -1567,8 +1567,44 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (err) { showToast('Error: ' + err.message, 'error'); }
     });
 
+    // === HOME / HERO ===
+    async function loadHeroStats() {
+        try {
+            const data = await fetchJSON(`${BASE_URL}/api/getStats.php`);
+            if (data.error) return;
+            document.querySelector('.stat-items').textContent = data.items.toLocaleString();
+            document.querySelector('.stat-users').textContent = data.users.toLocaleString();
+            document.querySelector('.stat-trades').textContent = data.trades.toLocaleString();
+        } catch (e) { /* silent */ }
+    }
+
+    // Scroll reveal
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    function observeReveal() {
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+    }
+
+    // Re-run on section change
+    const origShowSection = showSection;
+    showSection = function(sectionId) {
+        origShowSection(sectionId);
+        setTimeout(() => {
+            observeReveal();
+            if (sectionId === 'inicio') loadHeroStats();
+        }, 50);
+    };
+
     // === Init ===
     showSection('inicio');
     loadCategorias();
     loadItems(true);
+    loadHeroStats();
 });
