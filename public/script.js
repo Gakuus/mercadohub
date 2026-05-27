@@ -1525,16 +1525,27 @@ document.addEventListener('DOMContentLoaded', () => {
     // === Navigation ===
     navLinks.forEach(link => link.addEventListener('click', (event) => {
         event.preventDefault();
-        const sectionId = event.target.getAttribute('data-section');
+        navigateToSection(event.currentTarget.getAttribute('data-section'));
+    }));
+
+    // Global handler for any element with data-section (hero CTAs, etc.)
+    document.addEventListener('click', (event) => {
+        const btn = event.target.closest('[data-section]');
+        if (btn && !btn.closest('.nav-links')) {
+            event.preventDefault();
+            navigateToSection(btn.getAttribute('data-section'));
+        }
+    });
+
+    function navigateToSection(sectionId) {
         showSection(sectionId);
         if (sectionId === 'perfil') { loadProfile(); loadProfileItems(); }
         if (sectionId === 'foro') { showForoListView(); loadForoPosts(); }
         if (sectionId === 'admin') { loadAdminUsers(); loadAdminCategorias(); }
         if (sectionId === 'intercambios') { loadTrades(); }
-        // Close mobile menu
         if (navToggle) navToggle.classList.remove('open');
         if (navMenu) navMenu.classList.remove('open');
-    }));
+    }
 
     // === Fix profile edit CSRF ===
     const origProfileSubmit = document.getElementById('profile-edit')?.submit;
@@ -1557,7 +1568,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // === Init ===
-    showSection('items-disponibles');
+    showSection('inicio');
     loadCategorias();
     loadItems(true);
 });

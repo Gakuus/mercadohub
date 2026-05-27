@@ -29,14 +29,14 @@ $isAdmin = is_admin();
     <header>
         <nav class="main-nav">
             <div class="nav-inner">
-                <a href="#" class="nav-brand" data-section="items-disponibles">Mercado<span>Hub</span></a>
+                <a href="#" class="nav-brand" data-section="inicio">Mercado<span>Hub</span></a>
                 <button class="nav-toggle" aria-label="Menu" id="nav-toggle">
                     <span></span><span></span><span></span>
                 </button>
                 <div class="nav-menu" id="nav-menu">
-                    <a class="nav-link active" href="#" data-section="items-disponibles">Home</a>
+                    <a class="nav-link active" href="#" data-section="inicio">Inicio</a>
+                    <a class="nav-link" href="#" data-section="items-disponibles">Items</a>
                     <a class="nav-link" href="#" data-section="intercambio">Agregar Item</a>
-                    <a class="nav-link" href="#" data-section="inicio">Sobre nosotros</a>
                     <a class="nav-link" href="#" data-section="reglas">Reglas</a>
                     <a class="nav-link" href="#" data-section="foro">Foro</a>
                     <a class="nav-link" href="#" data-section="perfil">Perfil</a>
@@ -69,37 +69,79 @@ $isAdmin = is_admin();
     <div id="toast-container" class="toast-container"></div>
 
     <main>
-        <section id="inicio" class="section">
-            <div class="info-card">
-                <div class="info-hero">
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#77ff00" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-                    <h1>Bienvenido a MercadoHub</h1>
+        <section id="inicio" class="section active">
+            <div class="hero-wrap">
+                <div class="hero-bg-shapes">
+                    <div class="hero-shape hero-shape-1"></div>
+                    <div class="hero-shape hero-shape-2"></div>
+                    <div class="hero-shape hero-shape-3"></div>
                 </div>
-                <div class="info-body">
-                    <p>Somos mas que una plataforma de intercambio de items; somos una comunidad comprometida con la colaboracion y el apoyo mutuo.</p>
-                    <div class="info-grid">
-                        <div class="info-grid-item">
-                            <div class="info-grid-icon">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#77ff00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
-                            </div>
-                            <h3>Intercambio seguro</h3>
-                            <p>Facilitamos el intercambio de bienes entre personas de manera sencilla y segura.</p>
-                        </div>
-                        <div class="info-grid-item">
-                            <div class="info-grid-icon">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#77ff00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                            </div>
-                            <h3>Apoyo comunitario</h3>
-                            <p>Fomentamos el apoyo mutuo dentro de la comunidad para ayudar a quienes mas lo necesitan.</p>
-                        </div>
-                        <div class="info-grid-item">
-                            <div class="info-grid-icon">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#77ff00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                            </div>
-                            <h3>Solidaridad</h3>
-                            <p>Creemos en el poder de la solidaridad y la cooperacion. Juntos podemos hacer una diferencia.</p>
-                        </div>
+                <div class="hero-content">
+                    <div class="hero-badge">Comunidad de intercambio</div>
+                    <h1 class="hero-title">Mercado<span class="hero-accent">Hub</span></h1>
+                    <p class="hero-subtitle">El lugar donde los gamers intercambian sus items de forma segura y sencilla. Publica, busca y truequea con toda la comunidad.</p>
+                    <div class="hero-actions">
+                        <button class="hero-btn hero-btn-primary" data-section="items-disponibles">Ver items disponibles</button>
+                        <button class="hero-btn hero-btn-secondary" data-section="add-item">Publicar item</button>
                     </div>
+                </div>
+            </div>
+            <div class="how-it-works">
+                <h2 class="hiw-title">Como funciona</h2>
+                <div class="hiw-steps">
+                    <div class="hiw-step">
+                        <div class="hiw-step-num">1</div>
+                        <div class="hiw-step-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+                        </div>
+                        <h3>Publica tu item</h3>
+                        <p>Subi fotos, conta tu item y ponele un precio estimado. Cuanto mas detalle, mejor.</p>
+                    </div>
+                    <div class="hiw-step-arrow">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                    </div>
+                    <div class="hiw-step">
+                        <div class="hiw-step-num">2</div>
+                        <div class="hiw-step-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        </div>
+                        <h3>Encontra lo que buscas</h3>
+                        <p>Explora items de otros usuarios, filtra por categoria y encontre el trueque perfecto.</p>
+                    </div>
+                    <div class="hiw-step-arrow">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                    </div>
+                    <div class="hiw-step">
+                        <div class="hiw-step-num">3</div>
+                        <div class="hiw-step-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+                        </div>
+                        <h3>Intercambia</h3>
+                        <p>Envía propuestas de trueque, negocia y concretá el intercambio con toda confianza.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-features">
+                <div class="hero-feature-card">
+                    <div class="hfc-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+                    </div>
+                    <h3>Intercambio seguro</h3>
+                    <p>Facilitamos el intercambio de bienes entre personas de manera sencilla y segura.</p>
+                </div>
+                <div class="hero-feature-card">
+                    <div class="hfc-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    </div>
+                    <h3>Apoyo comunitario</h3>
+                    <p>Fomentamos el apoyo mutuo dentro de la comunidad para ayudar a quienes mas lo necesitan.</p>
+                </div>
+                <div class="hero-feature-card">
+                    <div class="hfc-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                    </div>
+                    <h3>Solidaridad</h3>
+                    <p>Creemos en el poder de la solidaridad y la cooperacion. Juntos podemos hacer la diferencia.</p>
                 </div>
             </div>
         </section>
@@ -290,7 +332,7 @@ $isAdmin = is_admin();
         </section>
 
         <!-- ============ ITEMS ============ -->
-        <section id="items-disponibles" class="section active">
+        <section id="items-disponibles" class="section">
             <div id="items-top-bar">
                 <select id="categoria-filter">
                     <option value="all">Todas las categorias</option>
