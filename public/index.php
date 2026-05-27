@@ -82,7 +82,7 @@ $isAdmin = is_admin();
                     <p class="hero-subtitle">El lugar donde los gamers intercambian sus items de forma segura y sencilla. Publica, busca y truequea con toda la comunidad.</p>
                     <div class="hero-actions">
                         <button class="hero-btn hero-btn-primary" data-section="items-disponibles">Ver items disponibles</button>
-                        <button class="hero-btn hero-btn-secondary" data-section="add-item">Publicar item</button>
+                        <button class="hero-btn hero-btn-secondary" data-section="intercambio">Publicar item</button>
                     </div>
                 </div>
             </div>
