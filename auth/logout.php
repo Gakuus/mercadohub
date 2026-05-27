@@ -4,6 +4,13 @@ require_once __DIR__ . '/../config/database.php';
 session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Validate CSRF token
+    $submittedToken = $_POST['csrf_token'] ?? '';
+    if (!validate_csrf($submittedToken)) {
+        header('Location: ' . BASE_URL . '/public/index.php');
+        exit;
+    }
+
     $_SESSION = [];
 
     if (ini_get("session.use_cookies")) {

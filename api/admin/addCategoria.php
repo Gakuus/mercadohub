@@ -4,10 +4,7 @@ require_once __DIR__ . '/../../config/database.php';
 
 header('Content-Type: application/json');
 
-if (!isset($_SESSION['user_id'])) {
-    echo json_encode(['error' => 'No has iniciado sesion.']);
-    exit;
-}
+require_login();
 require_admin();
 require_csrf();
 check_rate_limit('admin_categoria', 10, 60);
@@ -17,7 +14,6 @@ $nombre = trim($input['nombre'] ?? '');
 
 if (empty($nombre)) {
     echo json_encode(['error' => 'El nombre de la categoria es obligatorio.']);
-    exit;
 }
 
 try {

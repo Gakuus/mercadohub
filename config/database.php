@@ -209,6 +209,54 @@ function require_admin(): void {
     }
 }
 
+function require_login(): void {
+    if (!isset($_SESSION['user_id'])) {
+        http_response_code(401);
+        echo json_encode(['error' => 'No has iniciado sesion.']);
+        exit;
+    }
+    check_baneado();
+}
+
+function refresh_user_role(): void {
+    global $pdo;
+    if (!isset($_SESSION['user_id'])) return;
+    try {
+        $stmt = $pdo->prepare("SELECT rol, baneado FROM usuario WHERE id_usuario = ?");
+        $stmt->execute([$_SESSION['user_id']]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!$user) {
+            session_destroy();
+            return;
+        }
+        $_SESSION['user_rol'] = $user['rol'];
+        if ((int)$user['baneado'] === 1) {
+            session_destroy();
+            http_response_code(403);
+            echo json_encode(['error' => 'Tu cuenta ha sido suspendida.']);
+            exit;
+        }
+    } catch (Exception $e) {
+        // Silent
+    }
+}
+
+function check_baneado(): void {
+    if (!isset($_SESSION['user_id'])) return;
+    global $pdo;
+    try {
+        $stmt = $pdo->prepare("SELECT baneado FROM usuario WHERE id_usuario = ?");
+        $stmt->execute([$_SESSION['user_id']]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($row && (int)$row['baneado'] === 1) {
+            session_destroy();
+            http_response_code(403);
+            echo json_encode(['error' => 'Tu cuenta ha sido suspendida.']);
+            exit;
+        }
+    } catch (Exception $e) { /* silent */ }
+}
+
 function log_actividad(string $accion, ?string $detalles = null): void {
     global $pdo;
     try {

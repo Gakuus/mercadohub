@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   const form = document.getElementById('register-form');
   const email = document.getElementById('register-email');
   const username = document.getElementById('register-nombre_usuario');
@@ -9,6 +9,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const strengthText = document.getElementById('pw-strength-text');
 
   const BASE_URL = window.BASE_URL !== undefined ? window.BASE_URL : '/proyecto';
+
+  // Fetch CSRF token
+  let csrfToken = '';
+  try {
+    const res = await fetch(BASE_URL + '/api/getCsrfToken.php');
+    const data = await res.json();
+    csrfToken = data.token || '';
+  } catch (e) { /* will fail on POST if missing */ }
 
   function showAlert(msg, type = 'error') {
     alert.textContent = msg;
@@ -124,6 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
           email: email.value.trim(),
           nombre_usuario: userName,
           contrasena: pw,
+          csrf_token: csrfToken,
         }),
       });
 

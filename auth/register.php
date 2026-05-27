@@ -6,14 +6,21 @@ header('Content-Type: application/json');
 
 try {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        check_rate_limit('register', 3, 900); // 3 per 15 min
+        check_rate_limit('register', 3, 900);
+
         $data = json_decode(file_get_contents('php://input'), true);
+
+        // CSRF check
+        $submittedToken = $data['csrf_token'] ?? '';
+        if (!validate_csrf($submittedToken)) {
+            echo json_encode(['success' => false, 'message' => 'Token de seguridad invalido. Recarga la pagina.']);
+            exit;
+        }
 
         $email = filter_var($data['email'] ?? '', FILTER_SANITIZE_EMAIL);
         $nombre_usuario = preg_replace('/[^a-zA-Z0-9_]/', '', $data['nombre_usuario'] ?? '');
         $contrasena = $data['contrasena'] ?? '';
 
-        // Server-side validation
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             echo json_encode(['success' => false, 'message' => 'Correo electronico invalido.']);
             exit;
@@ -35,13 +42,12 @@ try {
         }
 
         $hashed_password = password_hash($contrasena, PASSWORD_BCRYPT, ['cost' => 12]);
-
         $stmt = $pdo->prepare('INSERT INTO usuario (nombre_usuario, contrasena, email) VALUES (?, ?, ?)');
         $stmt->execute([$nombre_usuario, $hashed_password, $email]);
 
         echo json_encode(['success' => true, 'message' => 'Cuenta creada exitosamente']);
     }
-    } catch (RuntimeException $e) {
+} catch (RuntimeException $e) {
     $msg = $e->getMessage();
     if (str_contains($msg, 'nombre_usuario')) {
         echo json_encode(['success' => false, 'message' => 'El nombre de usuario ya esta en uso.']);

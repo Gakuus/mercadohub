@@ -4,10 +4,7 @@ require_once __DIR__ . '/../config/database.php';
 
 header('Content-Type: application/json');
 
-if (!isset($_SESSION['user_id'])) {
-    echo json_encode(['error' => 'No has iniciado sesion.']);
-    exit;
-}
+require_login();
 require_csrf();
 check_rate_limit('delete_item', 20, 60);
 
@@ -18,7 +15,6 @@ $id_items = (int)($data['id_items'] ?? 0);
 
 if ($id_items <= 0) {
     echo json_encode(['error' => 'ID del item es obligatorio.']);
-    exit;
 }
 
 try {
@@ -29,7 +25,6 @@ try {
 
     if (!$item || (int)$item['id_usuario'] !== (int)$user_id) {
         echo json_encode(['error' => 'No tienes permiso para eliminar este item.']);
-        exit;
     }
 
     // Delete disk file if exists

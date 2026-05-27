@@ -4,10 +4,7 @@ require_once __DIR__ . '/../config/database.php';
 
 header('Content-Type: application/json');
 
-if (!isset($_SESSION['user_id'])) {
-    echo json_encode(['error' => 'Usuario no autenticado']);
-    exit;
-}
+require_login();
 require_csrf();
 check_rate_limit('update_profile', 5, 60);
 
@@ -22,7 +19,6 @@ try {
             $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
             if (!in_array($imagen['type'], $allowedTypes)) {
                 echo json_encode(['error' => 'Tipo de archivo no permitido. Solo JPG, PNG, GIF y WebP.']);
-                exit;
             }
 
             $imageData = file_get_contents($imagen['tmp_name']);

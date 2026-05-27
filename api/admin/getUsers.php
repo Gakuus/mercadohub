@@ -4,10 +4,7 @@ require_once __DIR__ . '/../../config/database.php';
 
 header('Content-Type: application/json');
 
-if (!isset($_SESSION['user_id'])) {
-    echo json_encode(['error' => 'No has iniciado sesion.']);
-    exit;
-}
+require_login();
 require_admin();
 
 try {

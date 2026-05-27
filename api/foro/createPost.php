@@ -4,10 +4,7 @@ require_once __DIR__ . '/../../config/database.php';
 
 header('Content-Type: application/json');
 
-if (!isset($_SESSION['user_id'])) {
-    echo json_encode(['error' => 'No has iniciado sesion.']);
-    exit;
-}
+require_login();
 require_csrf();
 check_rate_limit('forum_post', 5, 60);
 
@@ -18,12 +15,10 @@ $contenido = trim($input['contenido'] ?? '');
 
 if (empty($titulo) || empty($contenido)) {
     echo json_encode(['error' => 'El titulo y el contenido son obligatorios.']);
-    exit;
 }
 
 if (strlen($titulo) > 200) {
     echo json_encode(['error' => 'El titulo no puede superar los 200 caracteres.']);
-    exit;
 }
 
 try {

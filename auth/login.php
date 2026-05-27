@@ -22,6 +22,13 @@ try {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $data = json_decode(file_get_contents('php://input'), true);
 
+        // CSRF check
+        $submittedToken = $data['csrf_token'] ?? '';
+        if (!validate_csrf($submittedToken)) {
+            echo json_encode(['success' => false, 'message' => 'Token de seguridad invalido. Recarga la pagina.']);
+            exit;
+        }
+
         $email = filter_var($data['email'] ?? '', FILTER_SANITIZE_EMAIL);
         $nombre_usuario = preg_replace('/[^a-zA-Z0-9_]/', '', $data['nombre_usuario'] ?? '');
         $contrasena = $data['contrasena'] ?? '';
@@ -31,12 +38,25 @@ try {
             exit;
         }
 
-        $stmt = $pdo->prepare('SELECT id_usuario, contrasena, rol FROM usuario WHERE email = ? AND nombre_usuario = ?');
+        $stmt = $pdo->prepare('SELECT id_usuario, contrasena, rol, baneado FROM usuario WHERE email = ? AND nombre_usuario = ?');
         $stmt->execute([$email, $nombre_usuario]);
         $user = $stmt->fetch();
 
-        if ($user && password_verify($contrasena, $user['contrasena'])) {
-            // Success: clear rate limit, regenerate session
+        if (!$user) {
+            $_SESSION[$rateLimitKey] = [
+                'count' => ($_SESSION[$rateLimitKey]['count'] ?? 0) + 1,
+                'time' => time(),
+            ];
+            echo json_encode(['success' => false, 'message' => 'Email, usuario o contrasena incorrectos.']);
+            exit;
+        }
+
+        if ((int)$user['baneado'] === 1) {
+            echo json_encode(['success' => false, 'message' => 'Tu cuenta ha sido suspendida. Contacta al administrador.']);
+            exit;
+        }
+
+        if (password_verify($contrasena, $user['contrasena'])) {
             unset($_SESSION[$rateLimitKey]);
             session_regenerate_id(true);
             $_SESSION['user_id'] = $user['id_usuario'];
@@ -45,7 +65,6 @@ try {
             log_actividad('login', "Usuario {$nombre_usuario} inicio sesion");
             echo json_encode(['success' => true, 'message' => 'Login exitoso', 'redirect' => BASE_URL . '/public/index.php']);
         } else {
-            // Track failed attempt
             $_SESSION[$rateLimitKey] = [
                 'count' => ($_SESSION[$rateLimitKey]['count'] ?? 0) + 1,
                 'time' => time(),

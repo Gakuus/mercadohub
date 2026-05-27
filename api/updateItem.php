@@ -4,10 +4,7 @@ require_once __DIR__ . '/../config/database.php';
 
 header('Content-Type: application/json');
 
-if (!isset($_SESSION['user_id'])) {
-    echo json_encode(['error' => 'No has iniciado sesion.']);
-    exit;
-}
+require_login();
 require_csrf();
 check_rate_limit('update_item', 20, 60);
 
@@ -24,7 +21,6 @@ $imagenUrl = $input['imagen_url'] ?? '';
 
 if ($id_items <= 0 || empty($nombre_items)) {
     echo json_encode(['error' => 'ID y nombre del item son obligatorios.']);
-    exit;
 }
 
 try {
@@ -35,7 +31,6 @@ try {
 
     if (!$item || (int)$item['id_usuario'] !== (int)$user_id) {
         echo json_encode(['error' => 'No tienes permiso para modificar este item.']);
-        exit;
     }
 
     // Handle image update

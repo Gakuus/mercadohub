@@ -4,10 +4,7 @@ require_once __DIR__ . '/../config/database.php';
 
 header('Content-Type: application/json');
 
-if (!isset($_SESSION['user_id'])) {
-    echo json_encode(['error' => 'Usuario no autenticado.']);
-    exit;
-}
+require_login();
 require_csrf();
 check_rate_limit('add_item', 10, 60);
 
@@ -20,7 +17,16 @@ $categoria = $_POST['categoria'] ?? '';
 
 if (empty($nombre) || empty($categoria)) {
     echo json_encode(['error' => 'El nombre y la categoria son obligatorios.']);
-    exit;
+}
+
+if (mb_strlen($nombre) > 100) {
+    echo json_encode(['error' => 'El nombre no puede superar los 100 caracteres.']);
+}
+if (mb_strlen($descripcion) > 2000) {
+    echo json_encode(['error' => 'La descripcion no puede superar los 2000 caracteres.']);
+}
+if ($precio !== '' && (!is_numeric($precio) || (float)$precio < 0 || (float)$precio > 999999)) {
+    echo json_encode(['error' => 'Precio invalido.']);
 }
 
 $precioVal = $precio !== '' ? (float)$precio : null;
@@ -78,7 +84,6 @@ try {
 
     if (!$coverPath) {
         echo json_encode(['error' => 'La imagen principal es obligatoria y debe ser menor a 5MB.']);
-        exit;
     }
 
     // Insert item

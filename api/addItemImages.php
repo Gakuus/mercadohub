@@ -4,10 +4,7 @@ require_once __DIR__ . '/../config/database.php';
 
 header('Content-Type: application/json');
 
-if (!isset($_SESSION['user_id'])) {
-    echo json_encode(['error' => 'No has iniciado sesion.']);
-    exit;
-}
+require_login();
 require_csrf();
 check_rate_limit('add_item_images', 5, 60);
 
@@ -16,7 +13,6 @@ $itemId = (int)($_POST['id_items'] ?? 0);
 
 if ($itemId <= 0) {
     echo json_encode(['error' => 'ID de item invalido.']);
-    exit;
 }
 
 try {
@@ -26,7 +22,6 @@ try {
     $item = $check->fetch(PDO::FETCH_ASSOC);
     if (!$item || (int)$item['id_usuario'] !== (int)$user_id) {
         echo json_encode(['error' => 'No tienes permiso para modificar este item.']);
-        exit;
     }
 
     // Get current max orden
@@ -40,7 +35,6 @@ try {
     $extras = $_FILES['imagenes'] ?? null;
     if (!$extras || !is_array($extras['name'])) {
         echo json_encode(['error' => 'No se enviaron imagenes.']);
-        exit;
     }
 
     $added = 0;

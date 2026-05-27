@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   const form = document.getElementById('login-form');
   const email = document.getElementById('email');
   const username = document.getElementById('nombre_usuario');
@@ -7,6 +7,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const alert = document.getElementById('auth-alert');
 
   const BASE_URL = window.BASE_URL !== undefined ? window.BASE_URL : '/proyecto';
+
+  // Fetch CSRF token
+  let csrfToken = '';
+  try {
+    const res = await fetch(BASE_URL + '/api/getCsrfToken.php');
+    const data = await res.json();
+    csrfToken = data.token || '';
+  } catch (e) { /* will fail on POST if missing */ }
 
   function showAlert(msg, type = 'error') {
     alert.textContent = msg;
@@ -83,6 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
           email: email.value.trim(),
           nombre_usuario: username.value.trim(),
           contrasena: password.value,
+          csrf_token: csrfToken,
         }),
       });
 

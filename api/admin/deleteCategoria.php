@@ -4,10 +4,7 @@ require_once __DIR__ . '/../../config/database.php';
 
 header('Content-Type: application/json');
 
-if (!isset($_SESSION['user_id'])) {
-    echo json_encode(['error' => 'No has iniciado sesion.']);
-    exit;
-}
+require_login();
 require_admin();
 require_csrf();
 check_rate_limit('admin_categoria', 10, 60);
@@ -17,7 +14,6 @@ $id_juegos = (int)($input['id_juegos'] ?? 0);
 
 if ($id_juegos <= 0) {
     echo json_encode(['error' => 'ID de categoria invalido.']);
-    exit;
 }
 
 try {

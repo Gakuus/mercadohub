@@ -4,10 +4,7 @@ require_once __DIR__ . '/../../config/database.php';
 
 header('Content-Type: application/json');
 
-if (!isset($_SESSION['user_id'])) {
-    echo json_encode(['error' => 'No has iniciado sesion.']);
-    exit;
-}
+require_login();
 require_csrf();
 check_rate_limit('forum_delete', 10, 60);
 
@@ -17,7 +14,6 @@ $id_post = (int)($input['id_post'] ?? 0);
 
 if ($id_post <= 0) {
     echo json_encode(['error' => 'ID de post invalido.']);
-    exit;
 }
 
 try {
@@ -27,12 +23,10 @@ try {
 
     if (!$post) {
         echo json_encode(['error' => 'Post no encontrado.']);
-        exit;
     }
 
     if ((int)$post['id_usuario'] !== (int)$user_id) {
         echo json_encode(['error' => 'No puedes eliminar un post que no te pertenece.']);
-        exit;
     }
 
     $stmt = $pdo->prepare("DELETE FROM foro_posts WHERE id_post = ?");

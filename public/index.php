@@ -7,6 +7,9 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+// Refresh role from DB and check banned status
+refresh_user_role();
+
 // Ensure CSRF token exists
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
@@ -59,6 +62,7 @@ $isAdmin = is_admin();
                         </div>
                     </div>
                     <form action="<?= BASE_URL ?>/auth/logout.php" method="post" class="nav-logout-form">
+                        <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>">
                         <button type="submit" class="nav-logout-btn">Cerrar Sesion</button>
                     </form>
                 </div>

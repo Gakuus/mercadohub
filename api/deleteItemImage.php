@@ -4,10 +4,7 @@ require_once __DIR__ . '/../config/database.php';
 
 header('Content-Type: application/json');
 
-if (!isset($_SESSION['user_id'])) {
-    echo json_encode(['error' => 'No has iniciado sesion.']);
-    exit;
-}
+require_login();
 require_csrf();
 check_rate_limit('delete_item_image', 10, 60);
 
@@ -18,7 +15,6 @@ $id = (int)($input['id'] ?? 0);
 
 if ($id <= 0) {
     echo json_encode(['error' => 'ID de imagen invalido.']);
-    exit;
 }
 
 try {
@@ -34,17 +30,14 @@ try {
 
     if (!$img) {
         echo json_encode(['error' => 'Imagen no encontrada.']);
-        exit;
     }
 
     if ((int)$img['id_usuario'] !== (int)$user_id) {
         echo json_encode(['error' => 'No tienes permiso para eliminar esta imagen.']);
-        exit;
     }
 
     if ((int)$img['orden'] === 0) {
         echo json_encode(['error' => 'No se puede eliminar la imagen principal. Cambia la portada primero.']);
-        exit;
     }
 
     // Delete file
